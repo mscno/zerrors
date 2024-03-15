@@ -19,7 +19,7 @@ type UnavailableError struct {
 }
 
 func ThrowUnavailable(parent error, id, message string) error {
-	return &UnavailableError{CreateZnowError(parent, id, message)}
+	return &UnavailableError{CreateZerror(parent, id, message)}
 }
 
 func ThrowUnavailablef(parent error, id, format string, a ...interface{}) error {

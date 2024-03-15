@@ -20,7 +20,7 @@ type InternalError struct {
 
 func ThrowInternal(parent error, id, message string, kv ...any) error {
 	o := oops.With(kv...)
-	return &InternalError{CreateZnowError(o.Wrap(parent), id, message)}
+	return &InternalError{CreateZerror(o.Wrap(parent), id, message)}
 }
 
 //func ThrowInternalf(parent error, id, format string, a ...interface{}) error {

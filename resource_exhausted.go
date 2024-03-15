@@ -19,7 +19,7 @@ type ResourceExhaustedError struct {
 }
 
 func ThrowResourceExhausted(parent error, id, message string) error {
-	return &ResourceExhaustedError{CreateZnowError(parent, id, message)}
+	return &ResourceExhaustedError{CreateZerror(parent, id, message)}
 }
 
 func ThrowResourceExhaustedf(parent error, id, format string, a ...interface{}) error {

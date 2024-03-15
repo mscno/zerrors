@@ -19,7 +19,7 @@ type UnknownError struct {
 }
 
 func ThrowUnknown(parent error, id, message string) error {
-	return &UnknownError{CreateZnowError(parent, id, message)}
+	return &UnknownError{CreateZerror(parent, id, message)}
 }
 
 func ThrowUnknownf(parent error, id, format string, a ...interface{}) error {

@@ -19,7 +19,7 @@ type UnauthenticatedError struct {
 }
 
 func ThrowUnauthenticated(parent error, id, message string) error {
-	return &UnauthenticatedError{CreateZnowError(parent, id, message)}
+	return &UnauthenticatedError{CreateZerror(parent, id, message)}
 }
 
 func ThrowUnauthenticatedf(parent error, id, format string, a ...interface{}) error {

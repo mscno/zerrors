@@ -15,11 +15,11 @@ type {{.ErrorName}} interface {
 }
 
 type {{.ErrorName}}Error struct {
-	*CaosError
+	*Zerror
 }
 
 func Throw{{.ErrorName}}(parent error, message string) error {
-	return &{{.ErrorName}}Error{CreateCaosError(parent, message)}
+	return &{{.ErrorName}}Error{CreateZerror(parent, message)}
 }
 
 func Throw{{.ErrorName}}f(parent error, format string, a ...interface{}) error {

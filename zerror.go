@@ -15,10 +15,10 @@ type Zerror struct {
 }
 
 func ThrowError(parent error, id, message string) error {
-	return CreateZnowError(parent, id, message)
+	return CreateZerror(parent, id, message)
 }
 
-func CreateZnowError(parent error, id, message string) *Zerror {
+func CreateZerror(parent error, id, message string) *Zerror {
 	return &Zerror{
 		Parent:  parent,
 		ID:      id,

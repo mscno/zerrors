@@ -17,7 +17,7 @@ type InvalidArgumentError struct {
 }
 
 func ThrowInvalidArgument(parent error, id, message string) error {
-	return &InvalidArgumentError{CreateZnowError(parent, id, message)}
+	return &InvalidArgumentError{CreateZerror(parent, id, message)}
 }
 
 func ThrowInvalidArgumentf(parent error, id, format string, a ...interface{}) error {

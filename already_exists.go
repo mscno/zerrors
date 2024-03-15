@@ -1,6 +1,9 @@
 package zerrors
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 var (
 	_ AlreadyExists = (*AlreadyExistsError)(nil)
@@ -17,26 +20,31 @@ type AlreadyExistsError struct {
 }
 
 func ThrowAlreadyExists(parent error, id, message string) error {
-	return &AlreadyExistsError{CreateZnowError(parent, id, message)}
+	return &AlreadyExistsError{CreateZerror(parent, id, message)}
 }
 
 func ThrowAlreadyExistsf(parent error, id, format string, a ...interface{}) error {
-	return &AlreadyExistsError{CreateZnowError(parent, id, fmt.Sprintf(format, a...))}
+	return &AlreadyExistsError{CreateZerror(parent, id, fmt.Sprintf(format, a...))}
 }
 
 func (err *AlreadyExistsError) IsAlreadyExists() {}
 
 func (err *AlreadyExistsError) Is(target error) bool {
-	t, ok := target.(*AlreadyExistsError)
-	if !ok {
-		return false
+	var possibleError *AlreadyExistsError
+	if errors.As(target, &possibleError) {
+		target = possibleError
+		return true
 	}
-	return err.Zerror.Is(t.Zerror)
+	return false
 }
 
 func IsErrorAlreadyExists(err error) bool {
-	_, ok := err.(AlreadyExists)
-	return ok
+	var possibleError *AlreadyExistsError
+	if errors.As(err, &possibleError) {
+		err = possibleError
+		return true
+	}
+	return false
 }
 
 func (err *AlreadyExistsError) Unwrap() error {
