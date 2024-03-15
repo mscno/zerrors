@@ -1,33 +1,61 @@
-package errors_test
+package zerrors
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/zitadel/zitadel/internal/zerrors"
 )
 
 func Test{{.ErrorName}}Error(t *testing.T) {
 	var err interface{}
-	err = new(zerrors.{{.ErrorName}}Error)
-	_, ok := err.(*zerrors.{{.ErrorName}})
+	err = new({{.ErrorName}}Error)
+	_, ok := err.({{.ErrorName}})
 	assert.True(t, ok)
 }
 
 func TestThrow{{.ErrorName}}f(t *testing.T) {
-	err := zerrors.Throw{{.ErrorName}}f(nil, "msg")
-	_, ok := err.(*zerrors.{{.ErrorName}}Error)
+	err := Throw{{.ErrorName}}f(nil, "id", "msg")
+	_, ok := err.(*{{.ErrorName}}Error)
 	assert.True(t, ok)
 }
 
 func TestIs{{.ErrorName}}(t *testing.T) {
-	err := zerrors.Throw{{.ErrorName}}(nil, "msg")
-	ok := zerrors.Is{{.ErrorName}}(err)
+	err := Throw{{.ErrorName}}(nil, "id", "msg")
+	ok := Is{{.ErrorName}}(err)
+	assert.True(t, ok)
+
+	ok = errors.Is(err, &{{.ErrorName}}Error{})
+	assert.True(t, ok)
+
+	var e *{{.ErrorName}}Error
+	ok = errors.As(err, &e)
 	assert.True(t, ok)
 
 	err = errors.New("I am found!")
-	ok = zerrors.Is{{.ErrorName}}(err)
+	ok = Is{{.ErrorName}}(err)
 	assert.False(t, ok)
+
+	ok = errors.Is(err, &{{.ErrorName}}Error{})
+	assert.False(t, ok)
+}
+
+func TestFindWrapped{{.ErrorName}}(t *testing.T) {
+	err := Throw{{.ErrorName}}(nil, "id", "msg")
+	ok := Is{{.ErrorName}}(err)
+	assert.True(t, ok)
+
+	err = fmt.Errorf("wrapped %w", err)
+	ok = Is{{.ErrorName}}(err)
+	assert.True(t, ok)
+
+	ok = errors.Is(err, &{{.ErrorName}}Error{})
+	assert.True(t, ok)
+
+	var e *{{.ErrorName}}Error
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+
 }

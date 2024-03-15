@@ -1,6 +1,7 @@
 package zerrors
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,29 +19,24 @@ type UnavailableError struct {
 	*Zerror
 }
 
-func ThrowUnavailable(parent error, id, message string) error {
+func ThrowUnavailable(parent error, id string, message string) error {
 	return &UnavailableError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnavailablef(parent error, id, format string, a ...interface{}) error {
+func ThrowUnavailablef(parent error, id string, format string, a ...interface{}) error {
 	return ThrowUnavailable(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnavailableError) IsUnavailable() {}
 
-func IsUnavailable(err error) bool {
-	_, ok := err.(Unavailable)
-	return ok
-}
-
 func (err *UnavailableError) Is(target error) bool {
-	t, ok := target.(*UnavailableError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsUnavailable(target)
 }
 
-func (err *UnavailableError) Unwrap() error {
-	return err.Zerror
+func IsUnavailable(err error) bool {
+	var possibleError *UnavailableError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

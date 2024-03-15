@@ -58,6 +58,9 @@ func (err *Zerror) Is(target error) bool {
 	if !ok {
 		return false
 	}
+	if t == nil {
+		return false
+	}
 	if t.ID != "" && t.ID != err.ID {
 		return false
 	}

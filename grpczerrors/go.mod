@@ -1,6 +1,6 @@
 module github.com/mscno/zerrors/grpcerrors
 
-go 1.22.0
+go 1.22.1
 
 require (
 	google.golang.org/grpc v1.62.1

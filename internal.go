@@ -1,7 +1,8 @@
 package zerrors
 
 import (
-	"github.com/samber/oops"
+	"errors"
+	"fmt"
 )
 
 var (
@@ -18,30 +19,24 @@ type InternalError struct {
 	*Zerror
 }
 
-func ThrowInternal(parent error, id, message string, kv ...any) error {
-	o := oops.With(kv...)
-	return &InternalError{CreateZerror(o.Wrap(parent), id, message)}
+func ThrowInternal(parent error, id string, message string) error {
+	return &InternalError{CreateZerror(parent, id, message)}
 }
 
-//func ThrowInternalf(parent error, id, format string, a ...interface{}) error {
-//	return ThrowInternal(parent, id, fmt.Sprintf(format, a...))
-//}
+func ThrowInternalf(parent error, id string, format string, a ...interface{}) error {
+	return ThrowInternal(parent, id, fmt.Sprintf(format, a...))
+}
 
 func (err *InternalError) IsInternal() {}
 
-func IsInternal(err error) bool {
-	_, ok := err.(Internal)
-	return ok
-}
-
 func (err *InternalError) Is(target error) bool {
-	t, ok := target.(*InternalError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsInternal(target)
 }
 
-func (err *InternalError) Unwrap() error {
-	return err.Zerror
+func IsInternal(err error) bool {
+	var possibleError *InternalError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

@@ -1,6 +1,7 @@
 package zerrors
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,29 +19,24 @@ type DeadlineExceededError struct {
 	*Zerror
 }
 
-func ThrowDeadlineExceeded(parent error, id, message string) error {
+func ThrowDeadlineExceeded(parent error, id string, message string) error {
 	return &DeadlineExceededError{CreateZerror(parent, id, message)}
 }
 
-func ThrowDeadlineExceededf(parent error, id, format string, a ...interface{}) error {
+func ThrowDeadlineExceededf(parent error, id string, format string, a ...interface{}) error {
 	return ThrowDeadlineExceeded(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *DeadlineExceededError) IsDeadlineExceeded() {}
 
-func IsDeadlineExceeded(err error) bool {
-	_, ok := err.(DeadlineExceeded)
-	return ok
-}
-
 func (err *DeadlineExceededError) Is(target error) bool {
-	t, ok := target.(*DeadlineExceededError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsDeadlineExceeded(target)
 }
 
-func (err *DeadlineExceededError) Unwrap() error {
-	return err.Zerror
+func IsDeadlineExceeded(err error) bool {
+	var possibleError *DeadlineExceededError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

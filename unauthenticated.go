@@ -1,6 +1,7 @@
 package zerrors
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,29 +19,24 @@ type UnauthenticatedError struct {
 	*Zerror
 }
 
-func ThrowUnauthenticated(parent error, id, message string) error {
+func ThrowUnauthenticated(parent error, id string, message string) error {
 	return &UnauthenticatedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnauthenticatedf(parent error, id, format string, a ...interface{}) error {
+func ThrowUnauthenticatedf(parent error, id string, format string, a ...interface{}) error {
 	return ThrowUnauthenticated(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnauthenticatedError) IsUnauthenticated() {}
 
-func IsUnauthenticated(err error) bool {
-	_, ok := err.(Unauthenticated)
-	return ok
-}
-
 func (err *UnauthenticatedError) Is(target error) bool {
-	t, ok := target.(*UnauthenticatedError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsUnauthenticated(target)
 }
 
-func (err *UnauthenticatedError) Unwrap() error {
-	return err.Zerror
+func IsUnauthenticated(err error) bool {
+	var possibleError *UnauthenticatedError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

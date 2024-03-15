@@ -1,6 +1,9 @@
 package zerrors
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 var (
 	_ InvalidArgument = (*InvalidArgumentError)(nil)
@@ -16,29 +19,24 @@ type InvalidArgumentError struct {
 	*Zerror
 }
 
-func ThrowInvalidArgument(parent error, id, message string) error {
+func ThrowInvalidArgument(parent error, id string, message string) error {
 	return &InvalidArgumentError{CreateZerror(parent, id, message)}
 }
 
-func ThrowInvalidArgumentf(parent error, id, format string, a ...interface{}) error {
+func ThrowInvalidArgumentf(parent error, id string, format string, a ...interface{}) error {
 	return ThrowInvalidArgument(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *InvalidArgumentError) IsInvalidArgument() {}
 
-func IsErrorInvalidArgument(err error) bool {
-	_, ok := err.(InvalidArgument)
-	return ok
-}
-
 func (err *InvalidArgumentError) Is(target error) bool {
-	t, ok := target.(*InvalidArgumentError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsInvalidArgument(target)
 }
 
-func (err *InvalidArgumentError) Unwrap() error {
-	return err.Zerror
+func IsInvalidArgument(err error) bool {
+	var possibleError *InvalidArgumentError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

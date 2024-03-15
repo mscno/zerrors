@@ -19,34 +19,24 @@ type AlreadyExistsError struct {
 	*Zerror
 }
 
-func ThrowAlreadyExists(parent error, id, message string) error {
+func ThrowAlreadyExists(parent error, id string, message string) error {
 	return &AlreadyExistsError{CreateZerror(parent, id, message)}
 }
 
-func ThrowAlreadyExistsf(parent error, id, format string, a ...interface{}) error {
-	return &AlreadyExistsError{CreateZerror(parent, id, fmt.Sprintf(format, a...))}
+func ThrowAlreadyExistsf(parent error, id string, format string, a ...interface{}) error {
+	return ThrowAlreadyExists(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *AlreadyExistsError) IsAlreadyExists() {}
 
 func (err *AlreadyExistsError) Is(target error) bool {
-	var possibleError *AlreadyExistsError
-	if errors.As(target, &possibleError) {
-		target = possibleError
-		return true
-	}
-	return false
+	return IsAlreadyExists(target)
 }
 
-func IsErrorAlreadyExists(err error) bool {
+func IsAlreadyExists(err error) bool {
 	var possibleError *AlreadyExistsError
 	if errors.As(err, &possibleError) {
-		err = possibleError
 		return true
 	}
 	return false
-}
-
-func (err *AlreadyExistsError) Unwrap() error {
-	return err.Zerror
 }

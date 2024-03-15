@@ -1,6 +1,7 @@
 package zerrors
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,29 +19,24 @@ type UnimplementedError struct {
 	*Zerror
 }
 
-func ThrowUnimplemented(parent error, id, message string) error {
+func ThrowUnimplemented(parent error, id string, message string) error {
 	return &UnimplementedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnimplementedf(parent error, id, format string, a ...interface{}) error {
+func ThrowUnimplementedf(parent error, id string, format string, a ...interface{}) error {
 	return ThrowUnimplemented(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnimplementedError) IsUnimplemented() {}
 
-func IsUnimplemented(err error) bool {
-	_, ok := err.(Unimplemented)
-	return ok
-}
-
 func (err *UnimplementedError) Is(target error) bool {
-	t, ok := target.(*UnimplementedError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsUnimplemented(target)
 }
 
-func (err *UnimplementedError) Unwrap() error {
-	return err.Zerror
+func IsUnimplemented(err error) bool {
+	var possibleError *UnimplementedError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }

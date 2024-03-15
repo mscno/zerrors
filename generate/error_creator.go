@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/iancoleman/strcase"
 	"html/template"
 	"log"
 	"os"
@@ -14,9 +15,8 @@ import (
 go run ./error_creator.go --Name AlreadyExists
 go run ./error_creator.go --Name DeadlineExceeded
 go run ./error_creator.go --Name FailedPrecondition
-go run ./error_creator.go --Name Forbidden
 go run ./error_creator.go --Name Internal
-go run ./error_creator.go --Name Invalid Argument
+go run ./error_creator.go --Name InvalidArgument
 go run ./error_creator.go --Name NotFound
 go run ./error_creator.go --Name PermissionDenied
 go run ./error_creator.go --Name ResourceExhausted
@@ -64,7 +64,7 @@ type Data struct {
 }
 
 func (data *Data) createFile(tmplName string) *os.File {
-	filename := strings.Replace(tmplName, "error", strings.ToLower(data.ErrorName), 1)
+	filename := strings.Replace(tmplName, "error", strcase.ToSnake(data.ErrorName), 1)
 	filename = filename[:len(filename)-5]
 	filePath := fmt.Sprintf("../%s", filename)
 	file, err := os.Create(filePath)

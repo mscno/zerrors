@@ -1,6 +1,7 @@
 package zerrors
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,29 +19,24 @@ type UnknownError struct {
 	*Zerror
 }
 
-func ThrowUnknown(parent error, id, message string) error {
+func ThrowUnknown(parent error, id string, message string) error {
 	return &UnknownError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnknownf(parent error, id, format string, a ...interface{}) error {
+func ThrowUnknownf(parent error, id string, format string, a ...interface{}) error {
 	return ThrowUnknown(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnknownError) IsUnknown() {}
 
-func IsUnknown(err error) bool {
-	_, ok := err.(Unknown)
-	return ok
-}
-
 func (err *UnknownError) Is(target error) bool {
-	t, ok := target.(*UnknownError)
-	if !ok {
-		return false
-	}
-	return err.Zerror.Is(t.Zerror)
+	return IsUnknown(target)
 }
 
-func (err *UnknownError) Unwrap() error {
-	return err.Zerror
+func IsUnknown(err error) bool {
+	var possibleError *UnknownError
+	if errors.As(err, &possibleError) {
+		return true
+	}
+	return false
 }
