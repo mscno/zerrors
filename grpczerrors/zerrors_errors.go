@@ -48,7 +48,7 @@ func ExtractZNOWError(err error) (c codes.Code, msg, id string, ok bool) {
 		return codes.NotFound, zitadelErr.GetMessage(), zitadelErr.GetID(), true
 	case zerrors.IsPermissionDenied(err):
 		return codes.PermissionDenied, zitadelErr.GetMessage(), zitadelErr.GetID(), true
-	case zerrors.IsPreconditionFailed(err):
+	case zerrors.IsFailedPrecondition(err):
 		return codes.FailedPrecondition, zitadelErr.GetMessage(), zitadelErr.GetID(), true
 	case zerrors.IsUnauthenticated(err):
 		return codes.Unauthenticated, zitadelErr.GetMessage(), zitadelErr.GetID(), true

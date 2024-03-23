@@ -15,14 +15,14 @@ func TestUnauthenticatedError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowUnauthenticatedf(t *testing.T) {
-	err := ThrowUnauthenticatedf(nil, "id", "msg")
+func TestToUnauthenticatedf(t *testing.T) {
+	err := ToUnauthenticatedf(nil, "id", "msg")
 	_, ok := err.(*UnauthenticatedError)
 	assert.True(t, ok)
 }
 
 func TestIsUnauthenticated(t *testing.T) {
-	err := ThrowUnauthenticated(nil, "id", "msg")
+	err := ToUnauthenticated(nil, "id", "msg")
 	ok := IsUnauthenticated(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsUnauthenticated(t *testing.T) {
 }
 
 func TestFindWrappedUnauthenticated(t *testing.T) {
-	err := ThrowUnauthenticated(nil, "id", "msg")
+	err := ToUnauthenticated(nil, "id", "msg")
 	ok := IsUnauthenticated(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedUnauthenticated(t *testing.T) {
 }
 
 func TestUnauthenticatedWithRootCause(t *testing.T) {
-	err := ThrowUnauthenticated(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToUnauthenticated(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsUnauthenticated(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestUnauthenticatedWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherUnauthenticatedError(t *testing.T) {
-	err := ThrowUnauthenticated(nil, "id1", "msg")
+	err := ToUnauthenticated(nil, "id1", "msg")
 	ok := IsUnauthenticated(err)
 	assert.True(t, ok)
 
-	err = ThrowUnauthenticated(err, "id2", "msg")
+	err = ToUnauthenticated(err, "id2", "msg")
 	ok = IsUnauthenticated(err)
 	assert.True(t, ok)
 

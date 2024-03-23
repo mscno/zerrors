@@ -10,6 +10,8 @@ var (
 	_ Error            = (*PermissionDeniedError)(nil)
 )
 
+const PermissionDeniedId = "PermissionDenied"
+
 type PermissionDenied interface {
 	error
 	IsPermissionDenied()
@@ -19,12 +21,17 @@ type PermissionDeniedError struct {
 	*Zerror
 }
 
-func ThrowPermissionDenied(parent error, id string, message string) error {
+func ThrowPermissionDenied(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &PermissionDeniedError{CreateZerror(nil, PermissionDeniedId, message)}
+}
+
+func ToPermissionDenied(parent error, id string, message string) error {
 	return &PermissionDeniedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowPermissionDeniedf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowPermissionDenied(parent, id, fmt.Sprintf(format, a...))
+func ToPermissionDeniedf(parent error, id string, format string, a ...interface{}) error {
+	return ToPermissionDenied(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *PermissionDeniedError) IsPermissionDenied() {}

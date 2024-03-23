@@ -30,7 +30,7 @@ func TestCaosToGRPCError(t *testing.T) {
 		},
 		{
 			"caos error",
-			args{zerrors.ThrowInternal(nil, "", "message")},
+			args{zerrors.ToInternal(nil, "", "message")},
 			true,
 		},
 	}
@@ -57,7 +57,7 @@ func Test_Extract(t *testing.T) {
 	}{
 		{
 			"already exists",
-			args{zerrors.ThrowAlreadyExists(nil, "id", "already exists")},
+			args{zerrors.ToAlreadyExists(nil, "id", "already exists")},
 			codes.AlreadyExists,
 			"already exists",
 			"id",
@@ -65,7 +65,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"deadline exceeded",
-			args{zerrors.ThrowDeadlineExceeded(nil, "id", "deadline exceeded")},
+			args{zerrors.ToDeadlineExceeded(nil, "id", "deadline exceeded")},
 			codes.DeadlineExceeded,
 			"deadline exceeded",
 			"id",
@@ -73,7 +73,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"internal error",
-			args{zerrors.ThrowInternal(nil, "id", "internal error")},
+			args{zerrors.ToInternal(nil, "id", "internal error")},
 			codes.Internal,
 			"internal error",
 			"id",
@@ -81,7 +81,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"invalid argument",
-			args{zerrors.ThrowInvalidArgument(nil, "id", "invalid argument")},
+			args{zerrors.ToInvalidArgument(nil, "id", "invalid argument")},
 			codes.InvalidArgument,
 			"invalid argument",
 			"id",
@@ -89,7 +89,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"not found",
-			args{zerrors.ThrowNotFound(nil, "id", "not found")},
+			args{zerrors.ToNotFound(nil, "id", "not found")},
 			codes.NotFound,
 			"not found",
 			"id",
@@ -97,7 +97,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"permission denied",
-			args{zerrors.ThrowPermissionDenied(nil, "id", "permission denied")},
+			args{zerrors.ToPermissionDenied(nil, "id", "permission denied")},
 			codes.PermissionDenied,
 			"permission denied",
 			"id",
@@ -105,7 +105,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"precondition failed",
-			args{zerrors.ThrowPreconditionFailed(nil, "id", "precondition failed")},
+			args{zerrors.ToFailedPrecondition(nil, "id", "precondition failed")},
 			codes.FailedPrecondition,
 			"precondition failed",
 			"id",
@@ -113,7 +113,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"unauthenticated",
-			args{zerrors.ThrowUnauthenticated(nil, "id", "unauthenticated")},
+			args{zerrors.ToUnauthenticated(nil, "id", "unauthenticated")},
 			codes.Unauthenticated,
 			"unauthenticated",
 			"id",
@@ -121,7 +121,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"unavailable",
-			args{zerrors.ThrowUnavailable(nil, "id", "unavailable")},
+			args{zerrors.ToUnavailable(nil, "id", "unavailable")},
 			codes.Unavailable,
 			"unavailable",
 			"id",
@@ -129,7 +129,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"unimplemented",
-			args{zerrors.ThrowUnimplemented(nil, "id", "unimplemented")},
+			args{zerrors.ToUnimplemented(nil, "id", "unimplemented")},
 			codes.Unimplemented,
 			"unimplemented",
 			"id",
@@ -137,7 +137,7 @@ func Test_Extract(t *testing.T) {
 		},
 		{
 			"exhausted",
-			args{zerrors.ThrowResourceExhausted(nil, "id", "exhausted")},
+			args{zerrors.ToResourceExhausted(nil, "id", "exhausted")},
 			codes.ResourceExhausted,
 			"exhausted",
 			"id",

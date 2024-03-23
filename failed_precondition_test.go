@@ -15,14 +15,14 @@ func TestFailedPreconditionError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowFailedPreconditionf(t *testing.T) {
-	err := ThrowFailedPreconditionf(nil, "id", "msg")
+func TestToFailedPreconditionf(t *testing.T) {
+	err := ToFailedPreconditionf(nil, "id", "msg")
 	_, ok := err.(*FailedPreconditionError)
 	assert.True(t, ok)
 }
 
 func TestIsFailedPrecondition(t *testing.T) {
-	err := ThrowFailedPrecondition(nil, "id", "msg")
+	err := ToFailedPrecondition(nil, "id", "msg")
 	ok := IsFailedPrecondition(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsFailedPrecondition(t *testing.T) {
 }
 
 func TestFindWrappedFailedPrecondition(t *testing.T) {
-	err := ThrowFailedPrecondition(nil, "id", "msg")
+	err := ToFailedPrecondition(nil, "id", "msg")
 	ok := IsFailedPrecondition(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedFailedPrecondition(t *testing.T) {
 }
 
 func TestFailedPreconditionWithRootCause(t *testing.T) {
-	err := ThrowFailedPrecondition(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToFailedPrecondition(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsFailedPrecondition(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestFailedPreconditionWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherFailedPreconditionError(t *testing.T) {
-	err := ThrowFailedPrecondition(nil, "id1", "msg")
+	err := ToFailedPrecondition(nil, "id1", "msg")
 	ok := IsFailedPrecondition(err)
 	assert.True(t, ok)
 
-	err = ThrowFailedPrecondition(err, "id2", "msg")
+	err = ToFailedPrecondition(err, "id2", "msg")
 	ok = IsFailedPrecondition(err)
 	assert.True(t, ok)
 

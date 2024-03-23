@@ -10,6 +10,8 @@ var (
 	_ Error             = (*ResourceExhaustedError)(nil)
 )
 
+const ResourceExhaustedId = "ResourceExhausted"
+
 type ResourceExhausted interface {
 	error
 	IsResourceExhausted()
@@ -19,12 +21,17 @@ type ResourceExhaustedError struct {
 	*Zerror
 }
 
-func ThrowResourceExhausted(parent error, id string, message string) error {
+func ThrowResourceExhausted(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &ResourceExhaustedError{CreateZerror(nil, ResourceExhaustedId, message)}
+}
+
+func ToResourceExhausted(parent error, id string, message string) error {
 	return &ResourceExhaustedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowResourceExhaustedf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowResourceExhausted(parent, id, fmt.Sprintf(format, a...))
+func ToResourceExhaustedf(parent error, id string, format string, a ...interface{}) error {
+	return ToResourceExhausted(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *ResourceExhaustedError) IsResourceExhausted() {}

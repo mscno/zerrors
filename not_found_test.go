@@ -15,14 +15,14 @@ func TestNotFoundError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowNotFoundf(t *testing.T) {
-	err := ThrowNotFoundf(nil, "id", "msg")
+func TestToNotFoundf(t *testing.T) {
+	err := ToNotFoundf(nil, "id", "msg")
 	_, ok := err.(*NotFoundError)
 	assert.True(t, ok)
 }
 
 func TestIsNotFound(t *testing.T) {
-	err := ThrowNotFound(nil, "id", "msg")
+	err := ToNotFound(nil, "id", "msg")
 	ok := IsNotFound(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsNotFound(t *testing.T) {
 }
 
 func TestFindWrappedNotFound(t *testing.T) {
-	err := ThrowNotFound(nil, "id", "msg")
+	err := ToNotFound(nil, "id", "msg")
 	ok := IsNotFound(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedNotFound(t *testing.T) {
 }
 
 func TestNotFoundWithRootCause(t *testing.T) {
-	err := ThrowNotFound(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToNotFound(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsNotFound(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestNotFoundWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherNotFoundError(t *testing.T) {
-	err := ThrowNotFound(nil, "id1", "msg")
+	err := ToNotFound(nil, "id1", "msg")
 	ok := IsNotFound(err)
 	assert.True(t, ok)
 
-	err = ThrowNotFound(err, "id2", "msg")
+	err = ToNotFound(err, "id2", "msg")
 	ok = IsNotFound(err)
 	assert.True(t, ok)
 

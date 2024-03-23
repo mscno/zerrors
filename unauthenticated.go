@@ -10,6 +10,8 @@ var (
 	_ Error           = (*UnauthenticatedError)(nil)
 )
 
+const UnauthenticatedId = "Unauthenticated"
+
 type Unauthenticated interface {
 	error
 	IsUnauthenticated()
@@ -19,12 +21,17 @@ type UnauthenticatedError struct {
 	*Zerror
 }
 
-func ThrowUnauthenticated(parent error, id string, message string) error {
+func ThrowUnauthenticated(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &UnauthenticatedError{CreateZerror(nil, UnauthenticatedId, message)}
+}
+
+func ToUnauthenticated(parent error, id string, message string) error {
 	return &UnauthenticatedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnauthenticatedf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowUnauthenticated(parent, id, fmt.Sprintf(format, a...))
+func ToUnauthenticatedf(parent error, id string, format string, a ...interface{}) error {
+	return ToUnauthenticated(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnauthenticatedError) IsUnauthenticated() {}

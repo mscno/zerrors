@@ -15,14 +15,14 @@ func TestDeadlineExceededError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowDeadlineExceededf(t *testing.T) {
-	err := ThrowDeadlineExceededf(nil, "id", "msg")
+func TestToDeadlineExceededf(t *testing.T) {
+	err := ToDeadlineExceededf(nil, "id", "msg")
 	_, ok := err.(*DeadlineExceededError)
 	assert.True(t, ok)
 }
 
 func TestIsDeadlineExceeded(t *testing.T) {
-	err := ThrowDeadlineExceeded(nil, "id", "msg")
+	err := ToDeadlineExceeded(nil, "id", "msg")
 	ok := IsDeadlineExceeded(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsDeadlineExceeded(t *testing.T) {
 }
 
 func TestFindWrappedDeadlineExceeded(t *testing.T) {
-	err := ThrowDeadlineExceeded(nil, "id", "msg")
+	err := ToDeadlineExceeded(nil, "id", "msg")
 	ok := IsDeadlineExceeded(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedDeadlineExceeded(t *testing.T) {
 }
 
 func TestDeadlineExceededWithRootCause(t *testing.T) {
-	err := ThrowDeadlineExceeded(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToDeadlineExceeded(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsDeadlineExceeded(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestDeadlineExceededWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherDeadlineExceededError(t *testing.T) {
-	err := ThrowDeadlineExceeded(nil, "id1", "msg")
+	err := ToDeadlineExceeded(nil, "id1", "msg")
 	ok := IsDeadlineExceeded(err)
 	assert.True(t, ok)
 
-	err = ThrowDeadlineExceeded(err, "id2", "msg")
+	err = ToDeadlineExceeded(err, "id2", "msg")
 	ok = IsDeadlineExceeded(err)
 	assert.True(t, ok)
 

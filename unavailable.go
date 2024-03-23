@@ -10,6 +10,8 @@ var (
 	_ Error       = (*UnavailableError)(nil)
 )
 
+const UnavailableId = "Unavailable"
+
 type Unavailable interface {
 	error
 	IsUnavailable()
@@ -19,12 +21,17 @@ type UnavailableError struct {
 	*Zerror
 }
 
-func ThrowUnavailable(parent error, id string, message string) error {
+func ThrowUnavailable(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &UnavailableError{CreateZerror(nil, UnavailableId, message)}
+}
+
+func ToUnavailable(parent error, id string, message string) error {
 	return &UnavailableError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnavailablef(parent error, id string, format string, a ...interface{}) error {
-	return ThrowUnavailable(parent, id, fmt.Sprintf(format, a...))
+func ToUnavailablef(parent error, id string, format string, a ...interface{}) error {
+	return ToUnavailable(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnavailableError) IsUnavailable() {}

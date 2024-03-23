@@ -16,14 +16,14 @@ func Test{{.ErrorName}}Error(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrow{{.ErrorName}}f(t *testing.T) {
-	err := Throw{{.ErrorName}}f(nil, "id", "msg")
+func TestTo{{.ErrorName}}f(t *testing.T) {
+	err := To{{.ErrorName}}f(nil, "id", "msg")
 	_, ok := err.(*{{.ErrorName}}Error)
 	assert.True(t, ok)
 }
 
 func TestIs{{.ErrorName}}(t *testing.T) {
-	err := Throw{{.ErrorName}}(nil, "id", "msg")
+	err := To{{.ErrorName}}(nil, "id", "msg")
 	ok := Is{{.ErrorName}}(err)
 	assert.True(t, ok)
 
@@ -43,7 +43,7 @@ func TestIs{{.ErrorName}}(t *testing.T) {
 }
 
 func TestFindWrapped{{.ErrorName}}(t *testing.T) {
-	err := Throw{{.ErrorName}}(nil, "id", "msg")
+	err := To{{.ErrorName}}(nil, "id", "msg")
 	ok := Is{{.ErrorName}}(err)
 	assert.True(t, ok)
 
@@ -61,7 +61,7 @@ func TestFindWrapped{{.ErrorName}}(t *testing.T) {
 }
 
 func Test{{.ErrorName}}WithRootCause(t *testing.T) {
-	err := Throw{{.ErrorName}}(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := To{{.ErrorName}}(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := Is{{.ErrorName}}(err)
 	assert.True(t, ok)
 
@@ -87,11 +87,11 @@ func Test{{.ErrorName}}WithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnother{{.ErrorName}}Error(t *testing.T) {
-	err := Throw{{.ErrorName}}(nil, "id1", "msg")
+	err := To{{.ErrorName}}(nil, "id1", "msg")
 	ok := Is{{.ErrorName}}(err)
 	assert.True(t, ok)
 
-	err = Throw{{.ErrorName}}(err, "id2", "msg")
+	err = To{{.ErrorName}}(err, "id2", "msg")
 	ok = Is{{.ErrorName}}(err)
 	assert.True(t, ok)
 

@@ -10,6 +10,8 @@ var (
 	_ Error         = (*UnimplementedError)(nil)
 )
 
+const UnimplementedId = "Unimplemented"
+
 type Unimplemented interface {
 	error
 	IsUnimplemented()
@@ -19,12 +21,17 @@ type UnimplementedError struct {
 	*Zerror
 }
 
-func ThrowUnimplemented(parent error, id string, message string) error {
+func ThrowUnimplemented(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &UnimplementedError{CreateZerror(nil, UnimplementedId, message)}
+}
+
+func ToUnimplemented(parent error, id string, message string) error {
 	return &UnimplementedError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnimplementedf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowUnimplemented(parent, id, fmt.Sprintf(format, a...))
+func ToUnimplementedf(parent error, id string, format string, a ...interface{}) error {
+	return ToUnimplemented(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnimplementedError) IsUnimplemented() {}

@@ -10,6 +10,8 @@ var (
 	_ Error   = (*UnknownError)(nil)
 )
 
+const UnknownId = "Unknown"
+
 type Unknown interface {
 	error
 	IsUnknown()
@@ -19,12 +21,17 @@ type UnknownError struct {
 	*Zerror
 }
 
-func ThrowUnknown(parent error, id string, message string) error {
+func ThrowUnknown(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &UnknownError{CreateZerror(nil, UnknownId, message)}
+}
+
+func ToUnknown(parent error, id string, message string) error {
 	return &UnknownError{CreateZerror(parent, id, message)}
 }
 
-func ThrowUnknownf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowUnknown(parent, id, fmt.Sprintf(format, a...))
+func ToUnknownf(parent error, id string, format string, a ...interface{}) error {
+	return ToUnknown(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *UnknownError) IsUnknown() {}

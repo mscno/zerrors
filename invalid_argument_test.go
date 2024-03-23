@@ -15,14 +15,14 @@ func TestInvalidArgumentError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowInvalidArgumentf(t *testing.T) {
-	err := ThrowInvalidArgumentf(nil, "id", "msg")
+func TestToInvalidArgumentf(t *testing.T) {
+	err := ToInvalidArgumentf(nil, "id", "msg")
 	_, ok := err.(*InvalidArgumentError)
 	assert.True(t, ok)
 }
 
 func TestIsInvalidArgument(t *testing.T) {
-	err := ThrowInvalidArgument(nil, "id", "msg")
+	err := ToInvalidArgument(nil, "id", "msg")
 	ok := IsInvalidArgument(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsInvalidArgument(t *testing.T) {
 }
 
 func TestFindWrappedInvalidArgument(t *testing.T) {
-	err := ThrowInvalidArgument(nil, "id", "msg")
+	err := ToInvalidArgument(nil, "id", "msg")
 	ok := IsInvalidArgument(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedInvalidArgument(t *testing.T) {
 }
 
 func TestInvalidArgumentWithRootCause(t *testing.T) {
-	err := ThrowInvalidArgument(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToInvalidArgument(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsInvalidArgument(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestInvalidArgumentWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherInvalidArgumentError(t *testing.T) {
-	err := ThrowInvalidArgument(nil, "id1", "msg")
+	err := ToInvalidArgument(nil, "id1", "msg")
 	ok := IsInvalidArgument(err)
 	assert.True(t, ok)
 
-	err = ThrowInvalidArgument(err, "id2", "msg")
+	err = ToInvalidArgument(err, "id2", "msg")
 	ok = IsInvalidArgument(err)
 	assert.True(t, ok)
 

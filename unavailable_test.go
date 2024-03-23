@@ -15,14 +15,14 @@ func TestUnavailableError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowUnavailablef(t *testing.T) {
-	err := ThrowUnavailablef(nil, "id", "msg")
+func TestToUnavailablef(t *testing.T) {
+	err := ToUnavailablef(nil, "id", "msg")
 	_, ok := err.(*UnavailableError)
 	assert.True(t, ok)
 }
 
 func TestIsUnavailable(t *testing.T) {
-	err := ThrowUnavailable(nil, "id", "msg")
+	err := ToUnavailable(nil, "id", "msg")
 	ok := IsUnavailable(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsUnavailable(t *testing.T) {
 }
 
 func TestFindWrappedUnavailable(t *testing.T) {
-	err := ThrowUnavailable(nil, "id", "msg")
+	err := ToUnavailable(nil, "id", "msg")
 	ok := IsUnavailable(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedUnavailable(t *testing.T) {
 }
 
 func TestUnavailableWithRootCause(t *testing.T) {
-	err := ThrowUnavailable(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToUnavailable(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsUnavailable(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestUnavailableWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherUnavailableError(t *testing.T) {
-	err := ThrowUnavailable(nil, "id1", "msg")
+	err := ToUnavailable(nil, "id1", "msg")
 	ok := IsUnavailable(err)
 	assert.True(t, ok)
 
-	err = ThrowUnavailable(err, "id2", "msg")
+	err = ToUnavailable(err, "id2", "msg")
 	ok = IsUnavailable(err)
 	assert.True(t, ok)
 

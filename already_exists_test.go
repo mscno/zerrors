@@ -15,14 +15,14 @@ func TestAlreadyExistsError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowAlreadyExistsf(t *testing.T) {
-	err := ThrowAlreadyExistsf(nil, "id", "msg")
+func TestToAlreadyExistsf(t *testing.T) {
+	err := ToAlreadyExistsf(nil, "id", "msg")
 	_, ok := err.(*AlreadyExistsError)
 	assert.True(t, ok)
 }
 
 func TestIsAlreadyExists(t *testing.T) {
-	err := ThrowAlreadyExists(nil, "id", "msg")
+	err := ToAlreadyExists(nil, "id", "msg")
 	ok := IsAlreadyExists(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsAlreadyExists(t *testing.T) {
 }
 
 func TestFindWrappedAlreadyExists(t *testing.T) {
-	err := ThrowAlreadyExists(nil, "id", "msg")
+	err := ToAlreadyExists(nil, "id", "msg")
 	ok := IsAlreadyExists(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedAlreadyExists(t *testing.T) {
 }
 
 func TestAlreadyExistsWithRootCause(t *testing.T) {
-	err := ThrowAlreadyExists(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToAlreadyExists(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsAlreadyExists(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestAlreadyExistsWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherAlreadyExistsError(t *testing.T) {
-	err := ThrowAlreadyExists(nil, "id1", "msg")
+	err := ToAlreadyExists(nil, "id1", "msg")
 	ok := IsAlreadyExists(err)
 	assert.True(t, ok)
 
-	err = ThrowAlreadyExists(err, "id2", "msg")
+	err = ToAlreadyExists(err, "id2", "msg")
 	ok = IsAlreadyExists(err)
 	assert.True(t, ok)
 

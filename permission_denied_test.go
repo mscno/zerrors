@@ -15,14 +15,14 @@ func TestPermissionDeniedError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowPermissionDeniedf(t *testing.T) {
-	err := ThrowPermissionDeniedf(nil, "id", "msg")
+func TestToPermissionDeniedf(t *testing.T) {
+	err := ToPermissionDeniedf(nil, "id", "msg")
 	_, ok := err.(*PermissionDeniedError)
 	assert.True(t, ok)
 }
 
 func TestIsPermissionDenied(t *testing.T) {
-	err := ThrowPermissionDenied(nil, "id", "msg")
+	err := ToPermissionDenied(nil, "id", "msg")
 	ok := IsPermissionDenied(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsPermissionDenied(t *testing.T) {
 }
 
 func TestFindWrappedPermissionDenied(t *testing.T) {
-	err := ThrowPermissionDenied(nil, "id", "msg")
+	err := ToPermissionDenied(nil, "id", "msg")
 	ok := IsPermissionDenied(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedPermissionDenied(t *testing.T) {
 }
 
 func TestPermissionDeniedWithRootCause(t *testing.T) {
-	err := ThrowPermissionDenied(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToPermissionDenied(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsPermissionDenied(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestPermissionDeniedWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherPermissionDeniedError(t *testing.T) {
-	err := ThrowPermissionDenied(nil, "id1", "msg")
+	err := ToPermissionDenied(nil, "id1", "msg")
 	ok := IsPermissionDenied(err)
 	assert.True(t, ok)
 
-	err = ThrowPermissionDenied(err, "id2", "msg")
+	err = ToPermissionDenied(err, "id2", "msg")
 	ok = IsPermissionDenied(err)
 	assert.True(t, ok)
 

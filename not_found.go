@@ -10,6 +10,8 @@ var (
 	_ Error    = (*NotFoundError)(nil)
 )
 
+const NotFoundId = "NotFound"
+
 type NotFound interface {
 	error
 	IsNotFound()
@@ -19,12 +21,17 @@ type NotFoundError struct {
 	*Zerror
 }
 
-func ThrowNotFound(parent error, id string, message string) error {
+func ThrowNotFound(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &NotFoundError{CreateZerror(nil, NotFoundId, message)}
+}
+
+func ToNotFound(parent error, id string, message string) error {
 	return &NotFoundError{CreateZerror(parent, id, message)}
 }
 
-func ThrowNotFoundf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowNotFound(parent, id, fmt.Sprintf(format, a...))
+func ToNotFoundf(parent error, id string, format string, a ...interface{}) error {
+	return ToNotFound(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *NotFoundError) IsNotFound() {}

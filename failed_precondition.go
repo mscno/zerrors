@@ -10,6 +10,8 @@ var (
 	_ Error              = (*FailedPreconditionError)(nil)
 )
 
+const FailedPreconditionId = "FailedPrecondition"
+
 type FailedPrecondition interface {
 	error
 	IsFailedPrecondition()
@@ -19,12 +21,17 @@ type FailedPreconditionError struct {
 	*Zerror
 }
 
-func ThrowFailedPrecondition(parent error, id string, message string) error {
+func ThrowFailedPrecondition(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &FailedPreconditionError{CreateZerror(nil, FailedPreconditionId, message)}
+}
+
+func ToFailedPrecondition(parent error, id string, message string) error {
 	return &FailedPreconditionError{CreateZerror(parent, id, message)}
 }
 
-func ThrowFailedPreconditionf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowFailedPrecondition(parent, id, fmt.Sprintf(format, a...))
+func ToFailedPreconditionf(parent error, id string, format string, a ...interface{}) error {
+	return ToFailedPrecondition(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *FailedPreconditionError) IsFailedPrecondition() {}

@@ -10,6 +10,8 @@ var (
 	_ Error            = (*DeadlineExceededError)(nil)
 )
 
+const DeadlineExceededId = "DeadlineExceeded"
+
 type DeadlineExceeded interface {
 	error
 	IsDeadlineExceeded()
@@ -19,12 +21,17 @@ type DeadlineExceededError struct {
 	*Zerror
 }
 
-func ThrowDeadlineExceeded(parent error, id string, message string) error {
+func ThrowDeadlineExceeded(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &DeadlineExceededError{CreateZerror(nil, DeadlineExceededId, message)}
+}
+
+func ToDeadlineExceeded(parent error, id string, message string) error {
 	return &DeadlineExceededError{CreateZerror(parent, id, message)}
 }
 
-func ThrowDeadlineExceededf(parent error, id string, format string, a ...interface{}) error {
-	return ThrowDeadlineExceeded(parent, id, fmt.Sprintf(format, a...))
+func ToDeadlineExceededf(parent error, id string, format string, a ...interface{}) error {
+	return ToDeadlineExceeded(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *DeadlineExceededError) IsDeadlineExceeded() {}

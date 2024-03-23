@@ -7,8 +7,10 @@ import (
 
 var (
 	_ {{.ErrorName}} = (*{{.ErrorName}}Error)(nil)
-	_ Error = (*{{.ErrorName}}Error)(nil)
+	_ Error         = (*{{.ErrorName}}Error)(nil)
 )
+
+const {{.ErrorName}}Id = "{{.ErrorName}}"
 
 type {{.ErrorName}} interface {
 	error
@@ -19,12 +21,17 @@ type {{.ErrorName}}Error struct {
 	*Zerror
 }
 
-func Throw{{.ErrorName}}(parent error, id string, message string) error {
+func Throw{{.ErrorName}}(action, kind, name, reason string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
+	return &{{.ErrorName}}Error{CreateZerror(nil, {{.ErrorName}}Id, message)}
+}
+
+func To{{.ErrorName}}(parent error, id string, message string) error {
 	return &{{.ErrorName}}Error{CreateZerror(parent, id, message)}
 }
 
-func Throw{{.ErrorName}}f(parent error, id string, format string, a ...interface{}) error {
-	return Throw{{.ErrorName}}(parent, id, fmt.Sprintf(format, a...))
+func To{{.ErrorName}}f(parent error, id string, format string, a ...interface{}) error {
+	return To{{.ErrorName}}(parent, id, fmt.Sprintf(format, a...))
 }
 
 func (err *{{.ErrorName}}Error) Is{{.ErrorName}}() {}

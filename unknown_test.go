@@ -15,14 +15,14 @@ func TestUnknownError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowUnknownf(t *testing.T) {
-	err := ThrowUnknownf(nil, "id", "msg")
+func TestToUnknownf(t *testing.T) {
+	err := ToUnknownf(nil, "id", "msg")
 	_, ok := err.(*UnknownError)
 	assert.True(t, ok)
 }
 
 func TestIsUnknown(t *testing.T) {
-	err := ThrowUnknown(nil, "id", "msg")
+	err := ToUnknown(nil, "id", "msg")
 	ok := IsUnknown(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsUnknown(t *testing.T) {
 }
 
 func TestFindWrappedUnknown(t *testing.T) {
-	err := ThrowUnknown(nil, "id", "msg")
+	err := ToUnknown(nil, "id", "msg")
 	ok := IsUnknown(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedUnknown(t *testing.T) {
 }
 
 func TestUnknownWithRootCause(t *testing.T) {
-	err := ThrowUnknown(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToUnknown(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsUnknown(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestUnknownWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherUnknownError(t *testing.T) {
-	err := ThrowUnknown(nil, "id1", "msg")
+	err := ToUnknown(nil, "id1", "msg")
 	ok := IsUnknown(err)
 	assert.True(t, ok)
 
-	err = ThrowUnknown(err, "id2", "msg")
+	err = ToUnknown(err, "id2", "msg")
 	ok = IsUnknown(err)
 	assert.True(t, ok)
 

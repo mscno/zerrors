@@ -15,14 +15,14 @@ func TestInternalError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowInternalf(t *testing.T) {
-	err := ThrowInternalf(nil, "id", "msg")
+func TestToInternalf(t *testing.T) {
+	err := ToInternalf(nil, "id", "msg")
 	_, ok := err.(*InternalError)
 	assert.True(t, ok)
 }
 
 func TestIsInternal(t *testing.T) {
-	err := ThrowInternal(nil, "id", "msg")
+	err := ToInternal(nil, "id", "msg")
 	ok := IsInternal(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsInternal(t *testing.T) {
 }
 
 func TestFindWrappedInternal(t *testing.T) {
-	err := ThrowInternal(nil, "id", "msg")
+	err := ToInternal(nil, "id", "msg")
 	ok := IsInternal(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedInternal(t *testing.T) {
 }
 
 func TestInternalWithRootCause(t *testing.T) {
-	err := ThrowInternal(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToInternal(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsInternal(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestInternalWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherInternalError(t *testing.T) {
-	err := ThrowInternal(nil, "id1", "msg")
+	err := ToInternal(nil, "id1", "msg")
 	ok := IsInternal(err)
 	assert.True(t, ok)
 
-	err = ThrowInternal(err, "id2", "msg")
+	err = ToInternal(err, "id2", "msg")
 	ok = IsInternal(err)
 	assert.True(t, ok)
 

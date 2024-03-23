@@ -11,20 +11,6 @@ import (
 	"strings"
 )
 
-/*
-go run ./error_creator.go --Name AlreadyExists
-go run ./error_creator.go --Name DeadlineExceeded
-go run ./error_creator.go --Name FailedPrecondition
-go run ./error_creator.go --Name Internal
-go run ./error_creator.go --Name InvalidArgument
-go run ./error_creator.go --Name NotFound
-go run ./error_creator.go --Name PermissionDenied
-go run ./error_creator.go --Name ResourceExhausted
-go run ./error_creator.go --Name Unavailable
-go run ./error_creator.go --Name Unauthenticated
-go run ./error_creator.go --Name Unknown
-go run ./error_creator.go --Name Unimplemented
-*/
 func main() {
 	errorName := readErrorName()
 	errorName = validateErrorName(errorName)

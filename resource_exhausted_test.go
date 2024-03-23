@@ -15,14 +15,14 @@ func TestResourceExhaustedError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowResourceExhaustedf(t *testing.T) {
-	err := ThrowResourceExhaustedf(nil, "id", "msg")
+func TestToResourceExhaustedf(t *testing.T) {
+	err := ToResourceExhaustedf(nil, "id", "msg")
 	_, ok := err.(*ResourceExhaustedError)
 	assert.True(t, ok)
 }
 
 func TestIsResourceExhausted(t *testing.T) {
-	err := ThrowResourceExhausted(nil, "id", "msg")
+	err := ToResourceExhausted(nil, "id", "msg")
 	ok := IsResourceExhausted(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsResourceExhausted(t *testing.T) {
 }
 
 func TestFindWrappedResourceExhausted(t *testing.T) {
-	err := ThrowResourceExhausted(nil, "id", "msg")
+	err := ToResourceExhausted(nil, "id", "msg")
 	ok := IsResourceExhausted(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedResourceExhausted(t *testing.T) {
 }
 
 func TestResourceExhaustedWithRootCause(t *testing.T) {
-	err := ThrowResourceExhausted(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToResourceExhausted(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsResourceExhausted(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestResourceExhaustedWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherResourceExhaustedError(t *testing.T) {
-	err := ThrowResourceExhausted(nil, "id1", "msg")
+	err := ToResourceExhausted(nil, "id1", "msg")
 	ok := IsResourceExhausted(err)
 	assert.True(t, ok)
 
-	err = ThrowResourceExhausted(err, "id2", "msg")
+	err = ToResourceExhausted(err, "id2", "msg")
 	ok = IsResourceExhausted(err)
 	assert.True(t, ok)
 

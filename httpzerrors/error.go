@@ -24,7 +24,7 @@ func ZitadelErrorToHTTPStatusCode(err error) (statusCode int, ok bool) {
 		return http.StatusNotFound, true
 	case *zerrors.PermissionDeniedError:
 		return http.StatusForbidden, true
-	case *zerrors.PreconditionFailedError:
+	case *zerrors.FailedPreconditionError:
 		// use the same code as grpc-gateway:
 		// https://github.com/grpc-ecosystem/grpc-gateway/blob/9e33e38f15cb7d2f11096366e62ea391a3459ba9/runtime/errors.go#L59
 		return http.StatusBadRequest, true

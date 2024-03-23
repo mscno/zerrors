@@ -15,14 +15,14 @@ func TestUnimplementedError(t *testing.T) {
 	assert.True(t, ok)
 }
 
-func TestThrowUnimplementedf(t *testing.T) {
-	err := ThrowUnimplementedf(nil, "id", "msg")
+func TestToUnimplementedf(t *testing.T) {
+	err := ToUnimplementedf(nil, "id", "msg")
 	_, ok := err.(*UnimplementedError)
 	assert.True(t, ok)
 }
 
 func TestIsUnimplemented(t *testing.T) {
-	err := ThrowUnimplemented(nil, "id", "msg")
+	err := ToUnimplemented(nil, "id", "msg")
 	ok := IsUnimplemented(err)
 	assert.True(t, ok)
 
@@ -42,7 +42,7 @@ func TestIsUnimplemented(t *testing.T) {
 }
 
 func TestFindWrappedUnimplemented(t *testing.T) {
-	err := ThrowUnimplemented(nil, "id", "msg")
+	err := ToUnimplemented(nil, "id", "msg")
 	ok := IsUnimplemented(err)
 	assert.True(t, ok)
 
@@ -60,7 +60,7 @@ func TestFindWrappedUnimplemented(t *testing.T) {
 }
 
 func TestUnimplementedWithRootCause(t *testing.T) {
-	err := ThrowUnimplemented(fmt.Errorf("not domain"), "id", "no wrap message")
+	err := ToUnimplemented(fmt.Errorf("not domain"), "id", "no wrap message")
 	ok := IsUnimplemented(err)
 	assert.True(t, ok)
 
@@ -86,11 +86,11 @@ func TestUnimplementedWithRootCause(t *testing.T) {
 }
 
 func TestWrappingAnotherUnimplementedError(t *testing.T) {
-	err := ThrowUnimplemented(nil, "id1", "msg")
+	err := ToUnimplemented(nil, "id1", "msg")
 	ok := IsUnimplemented(err)
 	assert.True(t, ok)
 
-	err = ThrowUnimplemented(err, "id2", "msg")
+	err = ToUnimplemented(err, "id2", "msg")
 	ok = IsUnimplemented(err)
 	assert.True(t, ok)
 
