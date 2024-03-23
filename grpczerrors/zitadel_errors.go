@@ -36,13 +36,13 @@ func ExtractZNOWError(err error) (c codes.Code, msg, id string, ok bool) {
 		return codes.Unknown, err.Error(), "", false
 	}
 	switch {
-	case zerrors.IsErrorAlreadyExists(err):
+	case zerrors.IsAlreadyExists(err):
 		return codes.AlreadyExists, zitadelErr.GetMessage(), zitadelErr.GetID(), true
 	case zerrors.IsDeadlineExceeded(err):
 		return codes.DeadlineExceeded, zitadelErr.GetMessage(), zitadelErr.GetID(), true
 	case zerrors.IsInternal(err):
 		return codes.Internal, zitadelErr.GetMessage(), zitadelErr.GetID(), true
-	case zerrors.IsErrorInvalidArgument(err):
+	case zerrors.IsInvalidArgument(err):
 		return codes.InvalidArgument, zitadelErr.GetMessage(), zitadelErr.GetID(), true
 	case zerrors.IsNotFound(err):
 		return codes.NotFound, zitadelErr.GetMessage(), zitadelErr.GetID(), true

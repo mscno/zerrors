@@ -7,7 +7,7 @@ import (
 
 var (
 	_ {{.ErrorName}} = (*{{.ErrorName}}Error)(nil)
-	_ Error    = (*{{.ErrorName}}Error)(nil)
+	_ Error = (*{{.ErrorName}}Error)(nil)
 )
 
 type {{.ErrorName}} interface {

@@ -24,14 +24,6 @@ go run ./error_creator.go --Name Unavailable
 go run ./error_creator.go --Name Unauthenticated
 go run ./error_creator.go --Name Unknown
 go run ./error_creator.go --Name Unimplemented
-
-	func ThrowNotFound(parent error, message string) error {
-		return &NotFoundError{CreateCaosError(parent, message)}
-	}
-
-	func ThrowNotFoundf(parent error, format string, a ...interface{}) error {
-		return ThrowNotFound(parent, fmt.Sprintf(format, a...))
-	}
 */
 func main() {
 	errorName := readErrorName()

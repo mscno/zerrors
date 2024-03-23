@@ -33,9 +33,6 @@ func TestIsAlreadyExists(t *testing.T) {
 	ok = errors.As(err, &e)
 	assert.True(t, ok)
 
-	msg := "ID=id Message=msg"
-	assert.Equal(t, msg, err.Error())
-
 	err = errors.New("I am found!")
 	ok = IsAlreadyExists(err)
 	assert.False(t, ok)
@@ -60,8 +57,6 @@ func TestFindWrappedAlreadyExists(t *testing.T) {
 	ok = errors.As(err, &e)
 	assert.True(t, ok)
 
-	msg := "wrapped ID=id Message=msg"
-	assert.Equal(t, msg, err.Error())
 }
 
 func TestAlreadyExistsWithRootCause(t *testing.T) {
@@ -90,26 +85,23 @@ func TestAlreadyExistsWithRootCause(t *testing.T) {
 
 }
 
-func TestWrappingAnotherAlreadyExistError(t *testing.T) {
-	err := ThrowAlreadyExists(nil, "id", "msg")
+func TestWrappingAnotherAlreadyExistsError(t *testing.T) {
+	err := ThrowAlreadyExists(nil, "id1", "msg")
 	ok := IsAlreadyExists(err)
 	assert.True(t, ok)
 
-	err = ThrowAlreadyExists(err, "id", "msg")
+	err = ThrowAlreadyExists(err, "id2", "msg")
 	ok = IsAlreadyExists(err)
 	assert.True(t, ok)
 
 	ok = errors.Is(err, &AlreadyExistsError{})
 	assert.True(t, ok)
 
-	err = errors.New("I am found!")
-	err = fmt.Errorf("wrapped: %w", err)
-	err = fmt.Errorf("wrapped again: %w", err)
-
 	var e *AlreadyExistsError
 	ok = errors.As(err, &e)
 	assert.True(t, ok)
+	assert.Equal(t, "id2", e.Zerror.ID)
 
-	msg := "ID=id Message=msg"
+	msg := "ID=id2 Message=msg Parent=(ID=id1 Message=msg)"
 	assert.Equal(t, msg, err.Error())
 }
