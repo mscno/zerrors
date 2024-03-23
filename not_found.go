@@ -22,6 +22,10 @@ func NotFound(format string, a ...interface{}) error {
 	return oops.Code(ErrNotFound).Errorf(format, a...)
 }
 
+func NotFoundBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrNotFound)
+}
+
 func ToNotFound(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrNotFound).Wrapf(parent, format, a...)
 }

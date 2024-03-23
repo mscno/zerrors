@@ -22,6 +22,10 @@ func Unknown(format string, a ...interface{}) error {
 	return oops.Code(ErrUnknown).Errorf(format, a...)
 }
 
+func UnknownBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrUnknown)
+}
+
 func ToUnknown(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnknown).Wrapf(parent, format, a...)
 }

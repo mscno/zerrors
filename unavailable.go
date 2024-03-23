@@ -22,6 +22,10 @@ func Unavailable(format string, a ...interface{}) error {
 	return oops.Code(ErrUnavailable).Errorf(format, a...)
 }
 
+func UnavailableBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrUnavailable)
+}
+
 func ToUnavailable(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnavailable).Wrapf(parent, format, a...)
 }

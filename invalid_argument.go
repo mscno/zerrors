@@ -22,6 +22,10 @@ func InvalidArgument(format string, a ...interface{}) error {
 	return oops.Code(ErrInvalidArgument).Errorf(format, a...)
 }
 
+func InvalidArgumentBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrInvalidArgument)
+}
+
 func ToInvalidArgument(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrInvalidArgument).Wrapf(parent, format, a...)
 }

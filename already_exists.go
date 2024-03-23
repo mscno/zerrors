@@ -22,6 +22,10 @@ func AlreadyExists(format string, a ...interface{}) error {
 	return oops.Code(ErrAlreadyExists).Errorf(format, a...)
 }
 
+func AlreadyExistsBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrAlreadyExists)
+}
+
 func ToAlreadyExists(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrAlreadyExists).Wrapf(parent, format, a...)
 }

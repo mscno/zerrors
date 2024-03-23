@@ -22,6 +22,10 @@ func PermissionDenied(format string, a ...interface{}) error {
 	return oops.Code(ErrPermissionDenied).Errorf(format, a...)
 }
 
+func PermissionDeniedBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrPermissionDenied)
+}
+
 func ToPermissionDenied(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrPermissionDenied).Wrapf(parent, format, a...)
 }

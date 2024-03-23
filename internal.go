@@ -22,6 +22,10 @@ func Internal(format string, a ...interface{}) error {
 	return oops.Code(ErrInternal).Errorf(format, a...)
 }
 
+func InternalBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrInternal)
+}
+
 func ToInternal(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrInternal).Wrapf(parent, format, a...)
 }

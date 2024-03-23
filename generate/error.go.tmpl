@@ -22,6 +22,10 @@ func {{ .ErrorName }}(format string, a ...interface{}) error {
 	return oops.Code(Err{{ .ErrorName }}).Errorf(format, a...)
 }
 
+func {{ .ErrorName }}Builder() oops.OopsErrorBuilder {
+	return oops.Code(Err{{ .ErrorName }})
+}
+
 func To{{ .ErrorName }}(parent error, format string, a ...interface{}) error {
 	return oops.Code(Err{{ .ErrorName }}).Wrapf(parent, format, a...)
 }

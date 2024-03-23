@@ -22,6 +22,10 @@ func Unauthenticated(format string, a ...interface{}) error {
 	return oops.Code(ErrUnauthenticated).Errorf(format, a...)
 }
 
+func UnauthenticatedBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrUnauthenticated)
+}
+
 func ToUnauthenticated(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnauthenticated).Wrapf(parent, format, a...)
 }

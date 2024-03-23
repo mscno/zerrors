@@ -22,6 +22,10 @@ func FailedPrecondition(format string, a ...interface{}) error {
 	return oops.Code(ErrFailedPrecondition).Errorf(format, a...)
 }
 
+func FailedPreconditionBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrFailedPrecondition)
+}
+
 func ToFailedPrecondition(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrFailedPrecondition).Wrapf(parent, format, a...)
 }

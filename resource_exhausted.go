@@ -22,6 +22,10 @@ func ResourceExhausted(format string, a ...interface{}) error {
 	return oops.Code(ErrResourceExhausted).Errorf(format, a...)
 }
 
+func ResourceExhaustedBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrResourceExhausted)
+}
+
 func ToResourceExhausted(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrResourceExhausted).Wrapf(parent, format, a...)
 }

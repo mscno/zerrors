@@ -22,6 +22,10 @@ func Unimplemented(format string, a ...interface{}) error {
 	return oops.Code(ErrUnimplemented).Errorf(format, a...)
 }
 
+func UnimplementedBuilder() oops.OopsErrorBuilder {
+	return oops.Code(ErrUnimplemented)
+}
+
 func ToUnimplemented(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnimplemented).Wrapf(parent, format, a...)
 }
