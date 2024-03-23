@@ -21,7 +21,12 @@ type InternalError struct {
 	*Zerror
 }
 
-func ThrowInternal(action, kind, name, reason string) error {
+func ThrowInternal(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &InternalError{CreateZerror(nil, InternalId, message)}
+}
+
+func ThrowInternalr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &InternalError{CreateZerror(nil, InternalId, message)}
 }

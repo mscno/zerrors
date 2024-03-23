@@ -21,7 +21,12 @@ type DeadlineExceededError struct {
 	*Zerror
 }
 
-func ThrowDeadlineExceeded(action, kind, name, reason string) error {
+func ThrowDeadlineExceeded(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &DeadlineExceededError{CreateZerror(nil, DeadlineExceededId, message)}
+}
+
+func ThrowDeadlineExceededr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &DeadlineExceededError{CreateZerror(nil, DeadlineExceededId, message)}
 }

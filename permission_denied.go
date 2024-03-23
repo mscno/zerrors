@@ -21,7 +21,12 @@ type PermissionDeniedError struct {
 	*Zerror
 }
 
-func ThrowPermissionDenied(action, kind, name, reason string) error {
+func ThrowPermissionDenied(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &PermissionDeniedError{CreateZerror(nil, PermissionDeniedId, message)}
+}
+
+func ThrowPermissionDeniedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &PermissionDeniedError{CreateZerror(nil, PermissionDeniedId, message)}
 }

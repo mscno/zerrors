@@ -21,7 +21,12 @@ type FailedPreconditionError struct {
 	*Zerror
 }
 
-func ThrowFailedPrecondition(action, kind, name, reason string) error {
+func ThrowFailedPrecondition(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &FailedPreconditionError{CreateZerror(nil, FailedPreconditionId, message)}
+}
+
+func ThrowFailedPreconditionr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &FailedPreconditionError{CreateZerror(nil, FailedPreconditionId, message)}
 }

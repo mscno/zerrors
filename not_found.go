@@ -21,7 +21,12 @@ type NotFoundError struct {
 	*Zerror
 }
 
-func ThrowNotFound(action, kind, name, reason string) error {
+func ThrowNotFound(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &NotFoundError{CreateZerror(nil, NotFoundId, message)}
+}
+
+func ThrowNotFoundr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &NotFoundError{CreateZerror(nil, NotFoundId, message)}
 }

@@ -21,7 +21,12 @@ type AlreadyExistsError struct {
 	*Zerror
 }
 
-func ThrowAlreadyExists(action, kind, name, reason string) error {
+func ThrowAlreadyExists(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &AlreadyExistsError{CreateZerror(nil, AlreadyExistsId, message)}
+}
+
+func ThrowAlreadyExistsr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &AlreadyExistsError{CreateZerror(nil, AlreadyExistsId, message)}
 }

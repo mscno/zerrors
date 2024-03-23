@@ -21,7 +21,12 @@ type UnknownError struct {
 	*Zerror
 }
 
-func ThrowUnknown(action, kind, name, reason string) error {
+func ThrowUnknown(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &UnknownError{CreateZerror(nil, UnknownId, message)}
+}
+
+func ThrowUnknownr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &UnknownError{CreateZerror(nil, UnknownId, message)}
 }

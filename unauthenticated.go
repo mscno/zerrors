@@ -21,7 +21,12 @@ type UnauthenticatedError struct {
 	*Zerror
 }
 
-func ThrowUnauthenticated(action, kind, name, reason string) error {
+func ThrowUnauthenticated(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &UnauthenticatedError{CreateZerror(nil, UnauthenticatedId, message)}
+}
+
+func ThrowUnauthenticatedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &UnauthenticatedError{CreateZerror(nil, UnauthenticatedId, message)}
 }

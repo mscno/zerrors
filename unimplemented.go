@@ -21,7 +21,12 @@ type UnimplementedError struct {
 	*Zerror
 }
 
-func ThrowUnimplemented(action, kind, name, reason string) error {
+func ThrowUnimplemented(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &UnimplementedError{CreateZerror(nil, UnimplementedId, message)}
+}
+
+func ThrowUnimplementedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &UnimplementedError{CreateZerror(nil, UnimplementedId, message)}
 }

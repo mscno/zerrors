@@ -21,7 +21,12 @@ type UnavailableError struct {
 	*Zerror
 }
 
-func ThrowUnavailable(action, kind, name, reason string) error {
+func ThrowUnavailable(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &UnavailableError{CreateZerror(nil, UnavailableId, message)}
+}
+
+func ThrowUnavailabler(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &UnavailableError{CreateZerror(nil, UnavailableId, message)}
 }

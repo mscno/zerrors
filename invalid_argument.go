@@ -21,7 +21,12 @@ type InvalidArgumentError struct {
 	*Zerror
 }
 
-func ThrowInvalidArgument(action, kind, name, reason string) error {
+func ThrowInvalidArgument(action, kind, name string) error {
+	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
+	return &InvalidArgumentError{CreateZerror(nil, InvalidArgumentId, message)}
+}
+
+func ThrowInvalidArgumentr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
 	return &InvalidArgumentError{CreateZerror(nil, InvalidArgumentId, message)}
 }
