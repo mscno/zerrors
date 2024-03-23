@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ Unimplemented = (*UnimplementedError)(nil)
-	_ Error         = (*UnimplementedError)(nil)
-)
-
-const UnimplementedId = "Unimplemented"
-
-type Unimplemented interface {
-	error
-	IsUnimplemented()
-}
-
-type UnimplementedError struct {
-	*Zerror
-}
+const ErrUnimplemented = "unimplemented"
 
 func ThrowUnimplemented(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &UnimplementedError{CreateZerror(nil, UnimplementedId, message)}
+	return oops.Code(ErrUnimplemented).Errorf(message)
 }
 
 func ThrowUnimplementedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &UnimplementedError{CreateZerror(nil, UnimplementedId, message)}
+	return oops.Code(ErrUnimplemented).Errorf(message)
 }
 
-func ToUnimplemented(parent error, id string, message string) error {
-	return &UnimplementedError{CreateZerror(parent, id, message)}
+func Unimplemented(format string, a ...interface{}) error {
+	return oops.Code(ErrUnimplemented).Errorf(format, a...)
 }
 
-func ToUnimplementedf(parent error, id string, format string, a ...interface{}) error {
-	return ToUnimplemented(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *UnimplementedError) IsUnimplemented() {}
-
-func (err *UnimplementedError) Is(target error) bool {
-	return IsUnimplemented(target)
+func ToUnimplemented(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrUnimplemented).Wrapf(parent, format, a...)
 }
 
 func IsUnimplemented(err error) bool {
-	var possibleError *UnimplementedError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrUnimplemented
 	}
 	return false
 }

@@ -2,106 +2,41 @@ package zerrors
 
 import (
 	"errors"
-	"fmt"
+	"github.com/samber/oops"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeadlineExceededError(t *testing.T) {
-	var err interface{}
-	err = new(DeadlineExceededError)
-	_, ok := err.(DeadlineExceeded)
-	assert.True(t, ok)
-}
-
-func TestToDeadlineExceededf(t *testing.T) {
-	err := ToDeadlineExceededf(nil, "id", "msg")
-	_, ok := err.(*DeadlineExceededError)
-	assert.True(t, ok)
-}
-
-func TestIsDeadlineExceeded(t *testing.T) {
-	err := ToDeadlineExceeded(nil, "id", "msg")
+func TestToDeadlineExceededOnNil(t *testing.T) {
+	err := ToDeadlineExceeded(nil, "id")
 	ok := IsDeadlineExceeded(err)
-	assert.True(t, ok)
+	assert.False(t, ok)
+	assert.Equal(t, err, nil)
 
-	ok = errors.Is(err, &DeadlineExceededError{})
-	assert.True(t, ok)
+}
 
-	var e *DeadlineExceededError
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
+func TestToDeadlineExceeded(t *testing.T) {
+	err := ToDeadlineExceeded(errors.New("not domain"), "id")
+	assert.True(t, IsDeadlineExceeded(err))
 
-	err = errors.New("I am found!")
-	ok = IsDeadlineExceeded(err)
+	var e oops.OopsError
+	ok := errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrDeadlineExceeded, e.Code())
+}
+
+func TestIsDeadlineExceededOnNonDomain(t *testing.T) {
+	err := errors.New("I am found!")
+	ok := IsDeadlineExceeded(err)
 	assert.False(t, ok)
 
-	ok = errors.Is(err, &DeadlineExceededError{})
-	assert.False(t, ok)
 }
 
-func TestFindWrappedDeadlineExceeded(t *testing.T) {
-	err := ToDeadlineExceeded(nil, "id", "msg")
+func TestThrowDeadlineExceeded(t *testing.T) {
+	err := ThrowDeadlineExceeded("create", "user", "sam")
 	ok := IsDeadlineExceeded(err)
 	assert.True(t, ok)
 
-	err = fmt.Errorf("wrapped %w", err)
-	ok = IsDeadlineExceeded(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &DeadlineExceededError{})
-	assert.True(t, ok)
-
-	var e *DeadlineExceededError
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
-
-}
-
-func TestDeadlineExceededWithRootCause(t *testing.T) {
-	err := ToDeadlineExceeded(fmt.Errorf("not domain"), "id", "no wrap message")
-	ok := IsDeadlineExceeded(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &DeadlineExceededError{})
-	assert.True(t, ok)
-
-	var asDomain *DeadlineExceededError
-	ok = errors.As(err, &asDomain)
-	assert.True(t, ok)
-
-	if asDomain.Zerror.Parent == nil {
-		t.Fatal("underlying cause was not preserved")
-	}
-
-	assert.Equal(t, "not domain", asDomain.Zerror.Parent.Error())
-
-	assert.Equalf(t, "id", asDomain.Zerror.ID, "ID is not equal")
-	assert.Equalf(t, "no wrap message", asDomain.Zerror.Message, "Message is not equal")
-
-	msg := "ID=id Message=no wrap message Parent=(not domain)"
-	assert.Equal(t, msg, err.Error())
-
-}
-
-func TestWrappingAnotherDeadlineExceededError(t *testing.T) {
-	err := ToDeadlineExceeded(nil, "id1", "msg")
-	ok := IsDeadlineExceeded(err)
-	assert.True(t, ok)
-
-	err = ToDeadlineExceeded(err, "id2", "msg")
-	ok = IsDeadlineExceeded(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &DeadlineExceededError{})
-	assert.True(t, ok)
-
-	var e *DeadlineExceededError
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
-	assert.Equal(t, "id2", e.Zerror.ID)
-
-	msg := "ID=id2 Message=msg Parent=(ID=id1 Message=msg)"
-	assert.Equal(t, msg, err.Error())
+	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }

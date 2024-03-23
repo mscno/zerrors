@@ -3,6 +3,7 @@ package http
 import (
 	"errors"
 	"github.com/mscno/zerrors"
+	"github.com/samber/oops"
 	"net/http"
 )
 
@@ -11,36 +12,34 @@ func ZitadelErrorToHTTPStatusCode(err error) (statusCode int, ok bool) {
 		return http.StatusOK, true
 	}
 	//nolint:errorlint
-	switch err.(type) {
-	case *zerrors.AlreadyExistsError:
-		return http.StatusConflict, true
-	case *zerrors.DeadlineExceededError:
-		return http.StatusGatewayTimeout, true
-	case *zerrors.InternalError:
-		return http.StatusInternalServerError, true
-	case *zerrors.InvalidArgumentError:
-		return http.StatusBadRequest, true
-	case *zerrors.NotFoundError:
-		return http.StatusNotFound, true
-	case *zerrors.PermissionDeniedError:
-		return http.StatusForbidden, true
-	case *zerrors.FailedPreconditionError:
-		// use the same code as grpc-gateway:
-		// https://github.com/grpc-ecosystem/grpc-gateway/blob/9e33e38f15cb7d2f11096366e62ea391a3459ba9/runtime/errors.go#L59
-		return http.StatusBadRequest, true
-	case *zerrors.UnauthenticatedError:
-		return http.StatusUnauthorized, true
-	case *zerrors.UnavailableError:
-		return http.StatusServiceUnavailable, true
-	case *zerrors.UnimplementedError:
-		return http.StatusNotImplemented, true
-	case *zerrors.ResourceExhaustedError:
-		return http.StatusTooManyRequests, true
-	default:
-		c := new(zerrors.Zerror)
-		if errors.As(err, &c) {
-			return ZitadelErrorToHTTPStatusCode(errors.Unwrap(err))
+	var domainErr oops.OopsError
+	if errors.As(err, &domainErr) {
+		switch domainErr.Code() {
+		case zerrors.ErrAlreadyExists:
+			return http.StatusConflict, true
+		case zerrors.ErrDeadlineExceeded:
+			return http.StatusGatewayTimeout, true
+		case zerrors.ErrInternal:
+			return http.StatusInternalServerError, true
+		case zerrors.ErrInvalidArgument:
+			return http.StatusBadRequest, true
+		case zerrors.ErrNotFound:
+			return http.StatusNotFound, true
+		case zerrors.ErrPermissionDenied:
+			return http.StatusForbidden, true
+		case zerrors.ErrFailedPrecondition:
+			return http.StatusBadRequest, true
+		case zerrors.ErrUnauthenticated:
+			return http.StatusUnauthorized, true
+		case zerrors.ErrUnavailable:
+			return http.StatusServiceUnavailable, true
+		case zerrors.ErrUnimplemented:
+			return http.StatusNotImplemented, true
+		case zerrors.ErrResourceExhausted:
+			return http.StatusTooManyRequests, true
+		default:
+			return http.StatusInternalServerError, false
 		}
-		return http.StatusInternalServerError, false
 	}
+	return http.StatusInternalServerError, false
 }

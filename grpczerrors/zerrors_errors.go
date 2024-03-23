@@ -3,6 +3,7 @@ package grpczerrors
 import (
 	"errors"
 	"github.com/mscno/zerrors"
+	"github.com/samber/oops"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -31,33 +32,33 @@ func ExtractZNOWError(err error) (c codes.Code, msg, id string, ok bool) {
 	if err == nil {
 		return codes.OK, "", "", false
 	}
-	zitadelErr := new(zerrors.Zerror)
-	if ok := errors.As(err, &zitadelErr); !ok {
+	var domainErr oops.OopsError
+	if ok := errors.As(err, &domainErr); !ok {
 		return codes.Unknown, err.Error(), "", false
 	}
 	switch {
 	case zerrors.IsAlreadyExists(err):
-		return codes.AlreadyExists, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.AlreadyExists, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsDeadlineExceeded(err):
-		return codes.DeadlineExceeded, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.DeadlineExceeded, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsInternal(err):
-		return codes.Internal, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.Internal, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsInvalidArgument(err):
-		return codes.InvalidArgument, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.InvalidArgument, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsNotFound(err):
-		return codes.NotFound, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.NotFound, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsPermissionDenied(err):
-		return codes.PermissionDenied, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.PermissionDenied, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsFailedPrecondition(err):
-		return codes.FailedPrecondition, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.FailedPrecondition, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsUnauthenticated(err):
-		return codes.Unauthenticated, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.Unauthenticated, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsUnavailable(err):
-		return codes.Unavailable, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.Unavailable, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsUnimplemented(err):
-		return codes.Unimplemented, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.Unimplemented, domainErr.Error(), domainErr.Domain(), true
 	case zerrors.IsResourceExhausted(err):
-		return codes.ResourceExhausted, zitadelErr.GetMessage(), zitadelErr.GetID(), true
+		return codes.ResourceExhausted, domainErr.Error(), domainErr.Domain(), true
 	default:
 		return codes.Unknown, err.Error(), "", false
 	}

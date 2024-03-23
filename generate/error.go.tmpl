@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ {{.ErrorName}} = (*{{.ErrorName}}Error)(nil)
-	_ Error         = (*{{.ErrorName}}Error)(nil)
-)
+const Err{{ .ErrorName }} = "{{ .ErrorNameLowerSpaced }}"
 
-const {{.ErrorName}}Id = "{{.ErrorName}}"
-
-type {{.ErrorName}} interface {
-	error
-	Is{{.ErrorName}}()
-}
-
-type {{.ErrorName}}Error struct {
-	*Zerror
-}
-
-func Throw{{.ErrorName}}(action, kind, name string) error {
+func Throw{{ .ErrorName }}(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &{{.ErrorName}}Error{CreateZerror(nil, {{.ErrorName}}Id, message)}
+	return oops.Code(Err{{ .ErrorName }}).Errorf(message)
 }
 
-func Throw{{.ErrorName}}r(action, kind, name, reason string) error {
+func Throw{{ .ErrorName }}r(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &{{.ErrorName}}Error{CreateZerror(nil, {{.ErrorName}}Id, message)}
+	return oops.Code(Err{{ .ErrorName }}).Errorf(message)
 }
 
-func To{{.ErrorName}}(parent error, id string, message string) error {
-	return &{{.ErrorName}}Error{CreateZerror(parent, id, message)}
+func {{ .ErrorName }}(format string, a ...interface{}) error {
+	return oops.Code(Err{{ .ErrorName }}).Errorf(format, a...)
 }
 
-func To{{.ErrorName}}f(parent error, id string, format string, a ...interface{}) error {
-	return To{{.ErrorName}}(parent, id, fmt.Sprintf(format, a...))
+func To{{ .ErrorName }}(parent error, format string, a ...interface{}) error {
+	return oops.Code(Err{{ .ErrorName }}).Wrapf(parent, format, a...)
 }
 
-func (err *{{.ErrorName}}Error) Is{{.ErrorName}}() {}
-
-func (err *{{.ErrorName}}Error) Is(target error) bool {
-	return Is{{.ErrorName}}(target)
-}
-
-func Is{{.ErrorName}}(err error) bool {
-	var possibleError *{{.ErrorName}}Error
+func Is{{ .ErrorName }}(err error) bool {
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == Err{{ .ErrorName }}
 	}
 	return false
 }

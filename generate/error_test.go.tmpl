@@ -2,107 +2,41 @@ package zerrors
 
 import (
 	"errors"
-	"fmt"
+	"github.com/samber/oops"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 )
 
-func Test{{.ErrorName}}Error(t *testing.T) {
-	var err interface{}
-	err = new({{.ErrorName}}Error)
-	_, ok := err.({{.ErrorName}})
-	assert.True(t, ok)
+func TestTo{{ .ErrorName }}OnNil(t *testing.T) {
+	err := To{{ .ErrorName }}(nil, "id")
+	ok := Is{{ .ErrorName }}(err)
+	assert.False(t, ok)
+	assert.Equal(t, err, nil)
+
 }
 
-func TestTo{{.ErrorName}}f(t *testing.T) {
-	err := To{{.ErrorName}}f(nil, "id", "msg")
-	_, ok := err.(*{{.ErrorName}}Error)
+func TestTo{{ .ErrorName }}(t *testing.T) {
+	err := To{{ .ErrorName }}(errors.New("not domain"), "id")
+	assert.True(t, Is{{ .ErrorName }}(err))
+
+	var e oops.OopsError
+	ok := errors.As(err, &e)
 	assert.True(t, ok)
+	assert.Equal(t, Err{{ .ErrorName }}, e.Code())
 }
 
-func TestIs{{.ErrorName}}(t *testing.T) {
-	err := To{{.ErrorName}}(nil, "id", "msg")
-	ok := Is{{.ErrorName}}(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &{{.ErrorName}}Error{})
-	assert.True(t, ok)
-
-	var e *{{.ErrorName}}Error
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
-
-	err = errors.New("I am found!")
-	ok = Is{{.ErrorName}}(err)
+func TestIs{{ .ErrorName }}OnNonDomain(t *testing.T) {
+	err := errors.New("I am found!")
+	ok := Is{{ .ErrorName }}(err)
 	assert.False(t, ok)
 
-	ok = errors.Is(err, &{{.ErrorName}}Error{})
-	assert.False(t, ok)
 }
 
-func TestFindWrapped{{.ErrorName}}(t *testing.T) {
-	err := To{{.ErrorName}}(nil, "id", "msg")
-	ok := Is{{.ErrorName}}(err)
+func TestThrow{{ .ErrorName }}(t *testing.T) {
+	err := Throw{{ .ErrorName }}("create", "user", "sam")
+	ok := Is{{ .ErrorName }}(err)
 	assert.True(t, ok)
 
-	err = fmt.Errorf("wrapped %w", err)
-	ok = Is{{.ErrorName}}(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &{{.ErrorName}}Error{})
-	assert.True(t, ok)
-
-	var e *{{.ErrorName}}Error
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
-
-}
-
-func Test{{.ErrorName}}WithRootCause(t *testing.T) {
-	err := To{{.ErrorName}}(fmt.Errorf("not domain"), "id", "no wrap message")
-	ok := Is{{.ErrorName}}(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &{{.ErrorName}}Error{})
-	assert.True(t, ok)
-
-	var asDomain *{{.ErrorName}}Error
-	ok = errors.As(err, &asDomain)
-	assert.True(t, ok)
-
-	if asDomain.Zerror.Parent == nil {
-		t.Fatal("underlying cause was not preserved")
-	}
-
-	assert.Equal(t, "not domain", asDomain.Zerror.Parent.Error())
-
-	assert.Equalf(t, "id", asDomain.Zerror.ID, "ID is not equal")
-	assert.Equalf(t, "no wrap message", asDomain.Zerror.Message, "Message is not equal")
-
-	msg := "ID=id Message=no wrap message Parent=(not domain)"
-	assert.Equal(t, msg, err.Error())
-
-}
-
-func TestWrappingAnother{{.ErrorName}}Error(t *testing.T) {
-	err := To{{.ErrorName}}(nil, "id1", "msg")
-	ok := Is{{.ErrorName}}(err)
-	assert.True(t, ok)
-
-	err = To{{.ErrorName}}(err, "id2", "msg")
-	ok = Is{{.ErrorName}}(err)
-	assert.True(t, ok)
-
-	ok = errors.Is(err, &{{.ErrorName}}Error{})
-	assert.True(t, ok)
-
-	var e *{{.ErrorName}}Error
-	ok = errors.As(err, &e)
-	assert.True(t, ok)
-	assert.Equal(t, "id2", e.Zerror.ID)
-
-	msg := "ID=id2 Message=msg Parent=(ID=id1 Message=msg)"
-	assert.Equal(t, msg, err.Error())
+	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }

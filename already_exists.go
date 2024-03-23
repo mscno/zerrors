@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ AlreadyExists = (*AlreadyExistsError)(nil)
-	_ Error         = (*AlreadyExistsError)(nil)
-)
-
-const AlreadyExistsId = "AlreadyExists"
-
-type AlreadyExists interface {
-	error
-	IsAlreadyExists()
-}
-
-type AlreadyExistsError struct {
-	*Zerror
-}
+const ErrAlreadyExists = "already exists"
 
 func ThrowAlreadyExists(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &AlreadyExistsError{CreateZerror(nil, AlreadyExistsId, message)}
+	return oops.Code(ErrAlreadyExists).Errorf(message)
 }
 
 func ThrowAlreadyExistsr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &AlreadyExistsError{CreateZerror(nil, AlreadyExistsId, message)}
+	return oops.Code(ErrAlreadyExists).Errorf(message)
 }
 
-func ToAlreadyExists(parent error, id string, message string) error {
-	return &AlreadyExistsError{CreateZerror(parent, id, message)}
+func AlreadyExists(format string, a ...interface{}) error {
+	return oops.Code(ErrAlreadyExists).Errorf(format, a...)
 }
 
-func ToAlreadyExistsf(parent error, id string, format string, a ...interface{}) error {
-	return ToAlreadyExists(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *AlreadyExistsError) IsAlreadyExists() {}
-
-func (err *AlreadyExistsError) Is(target error) bool {
-	return IsAlreadyExists(target)
+func ToAlreadyExists(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrAlreadyExists).Wrapf(parent, format, a...)
 }
 
 func IsAlreadyExists(err error) bool {
-	var possibleError *AlreadyExistsError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrAlreadyExists
 	}
 	return false
 }

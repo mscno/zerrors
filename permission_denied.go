@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ PermissionDenied = (*PermissionDeniedError)(nil)
-	_ Error            = (*PermissionDeniedError)(nil)
-)
-
-const PermissionDeniedId = "PermissionDenied"
-
-type PermissionDenied interface {
-	error
-	IsPermissionDenied()
-}
-
-type PermissionDeniedError struct {
-	*Zerror
-}
+const ErrPermissionDenied = "permission denied"
 
 func ThrowPermissionDenied(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &PermissionDeniedError{CreateZerror(nil, PermissionDeniedId, message)}
+	return oops.Code(ErrPermissionDenied).Errorf(message)
 }
 
 func ThrowPermissionDeniedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &PermissionDeniedError{CreateZerror(nil, PermissionDeniedId, message)}
+	return oops.Code(ErrPermissionDenied).Errorf(message)
 }
 
-func ToPermissionDenied(parent error, id string, message string) error {
-	return &PermissionDeniedError{CreateZerror(parent, id, message)}
+func PermissionDenied(format string, a ...interface{}) error {
+	return oops.Code(ErrPermissionDenied).Errorf(format, a...)
 }
 
-func ToPermissionDeniedf(parent error, id string, format string, a ...interface{}) error {
-	return ToPermissionDenied(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *PermissionDeniedError) IsPermissionDenied() {}
-
-func (err *PermissionDeniedError) Is(target error) bool {
-	return IsPermissionDenied(target)
+func ToPermissionDenied(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrPermissionDenied).Wrapf(parent, format, a...)
 }
 
 func IsPermissionDenied(err error) bool {
-	var possibleError *PermissionDeniedError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrPermissionDenied
 	}
 	return false
 }

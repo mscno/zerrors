@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ InvalidArgument = (*InvalidArgumentError)(nil)
-	_ Error           = (*InvalidArgumentError)(nil)
-)
-
-const InvalidArgumentId = "InvalidArgument"
-
-type InvalidArgument interface {
-	error
-	IsInvalidArgument()
-}
-
-type InvalidArgumentError struct {
-	*Zerror
-}
+const ErrInvalidArgument = "invalid argument"
 
 func ThrowInvalidArgument(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &InvalidArgumentError{CreateZerror(nil, InvalidArgumentId, message)}
+	return oops.Code(ErrInvalidArgument).Errorf(message)
 }
 
 func ThrowInvalidArgumentr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &InvalidArgumentError{CreateZerror(nil, InvalidArgumentId, message)}
+	return oops.Code(ErrInvalidArgument).Errorf(message)
 }
 
-func ToInvalidArgument(parent error, id string, message string) error {
-	return &InvalidArgumentError{CreateZerror(parent, id, message)}
+func InvalidArgument(format string, a ...interface{}) error {
+	return oops.Code(ErrInvalidArgument).Errorf(format, a...)
 }
 
-func ToInvalidArgumentf(parent error, id string, format string, a ...interface{}) error {
-	return ToInvalidArgument(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *InvalidArgumentError) IsInvalidArgument() {}
-
-func (err *InvalidArgumentError) Is(target error) bool {
-	return IsInvalidArgument(target)
+func ToInvalidArgument(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrInvalidArgument).Wrapf(parent, format, a...)
 }
 
 func IsInvalidArgument(err error) bool {
-	var possibleError *InvalidArgumentError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrInvalidArgument
 	}
 	return false
 }

@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ Unknown = (*UnknownError)(nil)
-	_ Error   = (*UnknownError)(nil)
-)
-
-const UnknownId = "Unknown"
-
-type Unknown interface {
-	error
-	IsUnknown()
-}
-
-type UnknownError struct {
-	*Zerror
-}
+const ErrUnknown = "unknown"
 
 func ThrowUnknown(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &UnknownError{CreateZerror(nil, UnknownId, message)}
+	return oops.Code(ErrUnknown).Errorf(message)
 }
 
 func ThrowUnknownr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &UnknownError{CreateZerror(nil, UnknownId, message)}
+	return oops.Code(ErrUnknown).Errorf(message)
 }
 
-func ToUnknown(parent error, id string, message string) error {
-	return &UnknownError{CreateZerror(parent, id, message)}
+func Unknown(format string, a ...interface{}) error {
+	return oops.Code(ErrUnknown).Errorf(format, a...)
 }
 
-func ToUnknownf(parent error, id string, format string, a ...interface{}) error {
-	return ToUnknown(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *UnknownError) IsUnknown() {}
-
-func (err *UnknownError) Is(target error) bool {
-	return IsUnknown(target)
+func ToUnknown(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrUnknown).Wrapf(parent, format, a...)
 }
 
 func IsUnknown(err error) bool {
-	var possibleError *UnknownError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrUnknown
 	}
 	return false
 }

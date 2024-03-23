@@ -16,7 +16,8 @@ func main() {
 	errorName = validateErrorName(errorName)
 
 	data := &Data{
-		ErrorName: errorName,
+		ErrorName:            errorName,
+		ErrorNameLowerSpaced: strings.ReplaceAll(strcase.ToSnake(errorName), "_", " "),
 	}
 
 	errorFile := data.createFile("error.go.tmpl")
@@ -38,7 +39,8 @@ func main() {
 }
 
 type Data struct {
-	ErrorName string
+	ErrorName            string
+	ErrorNameLowerSpaced string
 }
 
 func (data *Data) createFile(tmplName string) *os.File {

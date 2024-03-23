@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ ResourceExhausted = (*ResourceExhaustedError)(nil)
-	_ Error             = (*ResourceExhaustedError)(nil)
-)
-
-const ResourceExhaustedId = "ResourceExhausted"
-
-type ResourceExhausted interface {
-	error
-	IsResourceExhausted()
-}
-
-type ResourceExhaustedError struct {
-	*Zerror
-}
+const ErrResourceExhausted = "resource exhausted"
 
 func ThrowResourceExhausted(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &ResourceExhaustedError{CreateZerror(nil, ResourceExhaustedId, message)}
+	return oops.Code(ErrResourceExhausted).Errorf(message)
 }
 
 func ThrowResourceExhaustedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &ResourceExhaustedError{CreateZerror(nil, ResourceExhaustedId, message)}
+	return oops.Code(ErrResourceExhausted).Errorf(message)
 }
 
-func ToResourceExhausted(parent error, id string, message string) error {
-	return &ResourceExhaustedError{CreateZerror(parent, id, message)}
+func ResourceExhausted(format string, a ...interface{}) error {
+	return oops.Code(ErrResourceExhausted).Errorf(format, a...)
 }
 
-func ToResourceExhaustedf(parent error, id string, format string, a ...interface{}) error {
-	return ToResourceExhausted(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *ResourceExhaustedError) IsResourceExhausted() {}
-
-func (err *ResourceExhaustedError) Is(target error) bool {
-	return IsResourceExhausted(target)
+func ToResourceExhausted(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrResourceExhausted).Wrapf(parent, format, a...)
 }
 
 func IsResourceExhausted(err error) bool {
-	var possibleError *ResourceExhaustedError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrResourceExhausted
 	}
 	return false
 }

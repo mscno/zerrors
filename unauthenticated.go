@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ Unauthenticated = (*UnauthenticatedError)(nil)
-	_ Error           = (*UnauthenticatedError)(nil)
-)
-
-const UnauthenticatedId = "Unauthenticated"
-
-type Unauthenticated interface {
-	error
-	IsUnauthenticated()
-}
-
-type UnauthenticatedError struct {
-	*Zerror
-}
+const ErrUnauthenticated = "unauthenticated"
 
 func ThrowUnauthenticated(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &UnauthenticatedError{CreateZerror(nil, UnauthenticatedId, message)}
+	return oops.Code(ErrUnauthenticated).Errorf(message)
 }
 
 func ThrowUnauthenticatedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &UnauthenticatedError{CreateZerror(nil, UnauthenticatedId, message)}
+	return oops.Code(ErrUnauthenticated).Errorf(message)
 }
 
-func ToUnauthenticated(parent error, id string, message string) error {
-	return &UnauthenticatedError{CreateZerror(parent, id, message)}
+func Unauthenticated(format string, a ...interface{}) error {
+	return oops.Code(ErrUnauthenticated).Errorf(format, a...)
 }
 
-func ToUnauthenticatedf(parent error, id string, format string, a ...interface{}) error {
-	return ToUnauthenticated(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *UnauthenticatedError) IsUnauthenticated() {}
-
-func (err *UnauthenticatedError) Is(target error) bool {
-	return IsUnauthenticated(target)
+func ToUnauthenticated(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrUnauthenticated).Wrapf(parent, format, a...)
 }
 
 func IsUnauthenticated(err error) bool {
-	var possibleError *UnauthenticatedError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrUnauthenticated
 	}
 	return false
 }

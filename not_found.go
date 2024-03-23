@@ -3,52 +3,33 @@ package zerrors
 import (
 	"errors"
 	"fmt"
+	"github.com/samber/oops"
 )
 
-var (
-	_ NotFound = (*NotFoundError)(nil)
-	_ Error    = (*NotFoundError)(nil)
-)
-
-const NotFoundId = "NotFound"
-
-type NotFound interface {
-	error
-	IsNotFound()
-}
-
-type NotFoundError struct {
-	*Zerror
-}
+const ErrNotFound = "not found"
 
 func ThrowNotFound(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return &NotFoundError{CreateZerror(nil, NotFoundId, message)}
+	return oops.Code(ErrNotFound).Errorf(message)
 }
 
 func ThrowNotFoundr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return &NotFoundError{CreateZerror(nil, NotFoundId, message)}
+	return oops.Code(ErrNotFound).Errorf(message)
 }
 
-func ToNotFound(parent error, id string, message string) error {
-	return &NotFoundError{CreateZerror(parent, id, message)}
+func NotFound(format string, a ...interface{}) error {
+	return oops.Code(ErrNotFound).Errorf(format, a...)
 }
 
-func ToNotFoundf(parent error, id string, format string, a ...interface{}) error {
-	return ToNotFound(parent, id, fmt.Sprintf(format, a...))
-}
-
-func (err *NotFoundError) IsNotFound() {}
-
-func (err *NotFoundError) Is(target error) bool {
-	return IsNotFound(target)
+func ToNotFound(parent error, format string, a ...interface{}) error {
+	return oops.Code(ErrNotFound).Wrapf(parent, format, a...)
 }
 
 func IsNotFound(err error) bool {
-	var possibleError *NotFoundError
+	var possibleError oops.OopsError
 	if errors.As(err, &possibleError) {
-		return true
+		return possibleError.Code() == ErrNotFound
 	}
 	return false
 }
