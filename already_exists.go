@@ -18,7 +18,11 @@ func ThrowAlreadyExistsr(action, kind, name, reason string) error {
 	return oops.Code(ErrAlreadyExists).Errorf(message)
 }
 
-func AlreadyExists(format string, a ...interface{}) error {
+func AlreadyExists(message string, KVs ...interface{}) error {
+	return oops.Code(ErrAlreadyExists).With(KVs...).Errorf(message)
+}
+
+func AlreadyExistsf(format string, a ...interface{}) error {
 	return oops.Code(ErrAlreadyExists).Errorf(format, a...)
 }
 

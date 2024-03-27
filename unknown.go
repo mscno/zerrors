@@ -18,7 +18,11 @@ func ThrowUnknownr(action, kind, name, reason string) error {
 	return oops.Code(ErrUnknown).Errorf(message)
 }
 
-func Unknown(format string, a ...interface{}) error {
+func Unknown(message string, KVs ...interface{}) error {
+	return oops.Code(ErrUnknown).With(KVs...).Errorf(message)
+}
+
+func Unknownf(format string, a ...interface{}) error {
 	return oops.Code(ErrUnknown).Errorf(format, a...)
 }
 

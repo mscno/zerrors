@@ -18,7 +18,11 @@ func ThrowResourceExhaustedr(action, kind, name, reason string) error {
 	return oops.Code(ErrResourceExhausted).Errorf(message)
 }
 
-func ResourceExhausted(format string, a ...interface{}) error {
+func ResourceExhausted(message string, KVs ...interface{}) error {
+	return oops.Code(ErrResourceExhausted).With(KVs...).Errorf(message)
+}
+
+func ResourceExhaustedf(format string, a ...interface{}) error {
 	return oops.Code(ErrResourceExhausted).Errorf(format, a...)
 }
 

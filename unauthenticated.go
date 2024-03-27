@@ -18,7 +18,11 @@ func ThrowUnauthenticatedr(action, kind, name, reason string) error {
 	return oops.Code(ErrUnauthenticated).Errorf(message)
 }
 
-func Unauthenticated(format string, a ...interface{}) error {
+func Unauthenticated(message string, KVs ...interface{}) error {
+	return oops.Code(ErrUnauthenticated).With(KVs...).Errorf(message)
+}
+
+func Unauthenticatedf(format string, a ...interface{}) error {
 	return oops.Code(ErrUnauthenticated).Errorf(format, a...)
 }
 

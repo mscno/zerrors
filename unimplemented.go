@@ -18,7 +18,11 @@ func ThrowUnimplementedr(action, kind, name, reason string) error {
 	return oops.Code(ErrUnimplemented).Errorf(message)
 }
 
-func Unimplemented(format string, a ...interface{}) error {
+func Unimplemented(message string, KVs ...interface{}) error {
+	return oops.Code(ErrUnimplemented).With(KVs...).Errorf(message)
+}
+
+func Unimplementedf(format string, a ...interface{}) error {
 	return oops.Code(ErrUnimplemented).Errorf(format, a...)
 }
 

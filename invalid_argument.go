@@ -18,7 +18,11 @@ func ThrowInvalidArgumentr(action, kind, name, reason string) error {
 	return oops.Code(ErrInvalidArgument).Errorf(message)
 }
 
-func InvalidArgument(format string, a ...interface{}) error {
+func InvalidArgument(message string, KVs ...interface{}) error {
+	return oops.Code(ErrInvalidArgument).With(KVs...).Errorf(message)
+}
+
+func InvalidArgumentf(format string, a ...interface{}) error {
 	return oops.Code(ErrInvalidArgument).Errorf(format, a...)
 }
 

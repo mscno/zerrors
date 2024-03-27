@@ -18,7 +18,11 @@ func ThrowPermissionDeniedr(action, kind, name, reason string) error {
 	return oops.Code(ErrPermissionDenied).Errorf(message)
 }
 
-func PermissionDenied(format string, a ...interface{}) error {
+func PermissionDenied(message string, KVs ...interface{}) error {
+	return oops.Code(ErrPermissionDenied).With(KVs...).Errorf(message)
+}
+
+func PermissionDeniedf(format string, a ...interface{}) error {
 	return oops.Code(ErrPermissionDenied).Errorf(format, a...)
 }
 

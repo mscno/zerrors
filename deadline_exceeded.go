@@ -18,7 +18,11 @@ func ThrowDeadlineExceededr(action, kind, name, reason string) error {
 	return oops.Code(ErrDeadlineExceeded).Errorf(message)
 }
 
-func DeadlineExceeded(format string, a ...interface{}) error {
+func DeadlineExceeded(message string, KVs ...interface{}) error {
+	return oops.Code(ErrDeadlineExceeded).With(KVs...).Errorf(message)
+}
+
+func DeadlineExceededf(format string, a ...interface{}) error {
 	return oops.Code(ErrDeadlineExceeded).Errorf(format, a...)
 }
 

@@ -18,7 +18,11 @@ func ThrowFailedPreconditionr(action, kind, name, reason string) error {
 	return oops.Code(ErrFailedPrecondition).Errorf(message)
 }
 
-func FailedPrecondition(format string, a ...interface{}) error {
+func FailedPrecondition(message string, KVs ...interface{}) error {
+	return oops.Code(ErrFailedPrecondition).With(KVs...).Errorf(message)
+}
+
+func FailedPreconditionf(format string, a ...interface{}) error {
 	return oops.Code(ErrFailedPrecondition).Errorf(format, a...)
 }
 

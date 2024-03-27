@@ -18,7 +18,11 @@ func ThrowNotFoundr(action, kind, name, reason string) error {
 	return oops.Code(ErrNotFound).Errorf(message)
 }
 
-func NotFound(format string, a ...interface{}) error {
+func NotFound(message string, KVs ...interface{}) error {
+	return oops.Code(ErrNotFound).With(KVs...).Errorf(message)
+}
+
+func NotFoundf(format string, a ...interface{}) error {
 	return oops.Code(ErrNotFound).Errorf(format, a...)
 }
 

@@ -18,7 +18,11 @@ func ThrowInternalr(action, kind, name, reason string) error {
 	return oops.Code(ErrInternal).Errorf(message)
 }
 
-func Internal(format string, a ...interface{}) error {
+func Internal(message string, KVs ...interface{}) error {
+	return oops.Code(ErrInternal).With(KVs...).Errorf(message)
+}
+
+func Internalf(format string, a ...interface{}) error {
 	return oops.Code(ErrInternal).Errorf(format, a...)
 }
 

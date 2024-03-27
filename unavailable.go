@@ -18,7 +18,11 @@ func ThrowUnavailabler(action, kind, name, reason string) error {
 	return oops.Code(ErrUnavailable).Errorf(message)
 }
 
-func Unavailable(format string, a ...interface{}) error {
+func Unavailable(message string, KVs ...interface{}) error {
+	return oops.Code(ErrUnavailable).With(KVs...).Errorf(message)
+}
+
+func Unavailablef(format string, a ...interface{}) error {
 	return oops.Code(ErrUnavailable).Errorf(format, a...)
 }
 
