@@ -16,5 +16,7 @@ jobs:
         with:
           go-version: 1.22
           cache: true
-      - name: Test
-        run: go test ./grpczerrors ./...
+      - name: Test zerrors
+        run: go test ./...
+      - name: Test grpczerrors
+        run: cd ./grpczerrors && go test ./...
