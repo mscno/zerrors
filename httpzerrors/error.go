@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ZitadelErrorToHTTPStatusCode(err error) (statusCode int, ok bool) {
+func ZErrorToHTTPStatusCode(err error) (statusCode int, ok bool) {
 	if err == nil {
 		return http.StatusOK, true
 	}

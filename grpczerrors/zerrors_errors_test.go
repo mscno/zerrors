@@ -36,8 +36,8 @@ func TestCaosToGRPCError(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := ZNOWToGRPCError(tt.args.err); (err != nil) != tt.wantErr {
-				t.Errorf("ZNOWToGRPCError() error = %v, wantErr %v", err, tt.wantErr)
+			if err := ZToGRPCError(tt.args.err); (err != nil) != tt.wantErr {
+				t.Errorf("ZToGRPCError() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -154,7 +154,7 @@ func Test_Extract(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotC, gotMsg, gotID, gotOk := ExtractZNOWError(tt.args.err)
+			gotC, gotMsg, gotID, gotOk := ExtractZError(tt.args.err)
 			if gotC != tt.wantC {
 				t.Errorf("extract() gotC = %v, want %v", gotC, tt.wantC)
 			}

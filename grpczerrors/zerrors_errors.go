@@ -9,11 +9,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func ZNOWToGRPCError(err error) error {
+func ZToGRPCError(err error) error {
 	if err == nil {
 		return nil
 	}
-	code, key, id, ok := ExtractZNOWError(err)
+	code, key, id, ok := ExtractZError(err)
 	if !ok {
 		return status.Convert(err).Err()
 	}
@@ -28,7 +28,7 @@ func ZNOWToGRPCError(err error) error {
 	return s.Err()
 }
 
-func ExtractZNOWError(err error) (c codes.Code, msg, id string, ok bool) {
+func ExtractZError(err error) (c codes.Code, msg, id string, ok bool) {
 	if err == nil {
 		return codes.OK, "", "", false
 	}
