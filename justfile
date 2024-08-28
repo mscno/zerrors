@@ -4,4 +4,5 @@ generate:
 
 test:
     @echo "Running tests"
-    @go test ./grpczerrors ./...
+    go test ./...
+    cd ./grpczerrors && go test
