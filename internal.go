@@ -10,16 +10,16 @@ const ErrInternal = "internal"
 
 func ThrowInternal(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return oops.Code(ErrInternal).Errorf(message)
+	return oops.Code(ErrInternal).Wrap(errors.New(message))
 }
 
 func ThrowInternalr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return oops.Code(ErrInternal).Errorf(message)
+	return oops.Code(ErrInternal).Wrap(errors.New(message))
 }
 
 func Internal(message string, KVs ...interface{}) error {
-	return oops.Code(ErrInternal).With(KVs...).Errorf(message)
+	return oops.Code(ErrInternal).With(KVs...).Wrap(errors.New(message))
 }
 
 func Internalf(format string, a ...interface{}) error {

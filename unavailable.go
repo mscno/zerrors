@@ -10,16 +10,16 @@ const ErrUnavailable = "unavailable"
 
 func ThrowUnavailable(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return oops.Code(ErrUnavailable).Errorf(message)
+	return oops.Code(ErrUnavailable).Wrap(errors.New(message))
 }
 
 func ThrowUnavailabler(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return oops.Code(ErrUnavailable).Errorf(message)
+	return oops.Code(ErrUnavailable).Wrap(errors.New(message))
 }
 
 func Unavailable(message string, KVs ...interface{}) error {
-	return oops.Code(ErrUnavailable).With(KVs...).Errorf(message)
+	return oops.Code(ErrUnavailable).With(KVs...).Wrap(errors.New(message))
 }
 
 func Unavailablef(format string, a ...interface{}) error {

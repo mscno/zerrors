@@ -10,16 +10,16 @@ const ErrUnauthenticated = "unauthenticated"
 
 func ThrowUnauthenticated(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return oops.Code(ErrUnauthenticated).Errorf(message)
+	return oops.Code(ErrUnauthenticated).Wrap(errors.New(message))
 }
 
 func ThrowUnauthenticatedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return oops.Code(ErrUnauthenticated).Errorf(message)
+	return oops.Code(ErrUnauthenticated).Wrap(errors.New(message))
 }
 
 func Unauthenticated(message string, KVs ...interface{}) error {
-	return oops.Code(ErrUnauthenticated).With(KVs...).Errorf(message)
+	return oops.Code(ErrUnauthenticated).With(KVs...).Wrap(errors.New(message))
 }
 
 func Unauthenticatedf(format string, a ...interface{}) error {

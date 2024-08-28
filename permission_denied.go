@@ -10,16 +10,16 @@ const ErrPermissionDenied = "permission denied"
 
 func ThrowPermissionDenied(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return oops.Code(ErrPermissionDenied).Errorf(message)
+	return oops.Code(ErrPermissionDenied).Wrap(errors.New(message))
 }
 
 func ThrowPermissionDeniedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return oops.Code(ErrPermissionDenied).Errorf(message)
+	return oops.Code(ErrPermissionDenied).Wrap(errors.New(message))
 }
 
 func PermissionDenied(message string, KVs ...interface{}) error {
-	return oops.Code(ErrPermissionDenied).With(KVs...).Errorf(message)
+	return oops.Code(ErrPermissionDenied).With(KVs...).Wrap(errors.New(message))
 }
 
 func PermissionDeniedf(format string, a ...interface{}) error {

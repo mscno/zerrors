@@ -10,16 +10,16 @@ const ErrUnimplemented = "unimplemented"
 
 func ThrowUnimplemented(action, kind, name string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s'", action, name, kind)
-	return oops.Code(ErrUnimplemented).Errorf(message)
+	return oops.Code(ErrUnimplemented).Wrap(errors.New(message))
 }
 
 func ThrowUnimplementedr(action, kind, name, reason string) error {
 	message := fmt.Sprintf("cannot %s '%s' of kind '%s': %s", action, name, kind, reason)
-	return oops.Code(ErrUnimplemented).Errorf(message)
+	return oops.Code(ErrUnimplemented).Wrap(errors.New(message))
 }
 
 func Unimplemented(message string, KVs ...interface{}) error {
-	return oops.Code(ErrUnimplemented).With(KVs...).Errorf(message)
+	return oops.Code(ErrUnimplemented).With(KVs...).Wrap(errors.New(message))
 }
 
 func Unimplementedf(format string, a ...interface{}) error {

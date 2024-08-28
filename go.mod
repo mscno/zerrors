@@ -3,7 +3,7 @@ module github.com/mscno/zerrors
 go 1.23
 
 require (
-	github.com/samber/oops v1.10.1
+	github.com/samber/oops v1.13.1
 	github.com/stretchr/testify v1.9.0
 
 )
