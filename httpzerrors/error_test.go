@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestZitadelErrorToHTTPStatusCode(t *testing.T) {
+func TestZErrorToHTTPStatusCode(t *testing.T) {
 	type args struct {
 		err error
 	}
