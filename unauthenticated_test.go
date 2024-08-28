@@ -40,3 +40,11 @@ func TestThrowUnauthenticated(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestUnauthenticatedf(t *testing.T) {
+	err := Unauthenticatedf("something happened: %s", "reason")
+	ok := IsUnauthenticated(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

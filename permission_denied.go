@@ -23,7 +23,7 @@ func PermissionDenied(message string, KVs ...interface{}) error {
 }
 
 func PermissionDeniedf(format string, a ...interface{}) error {
-	return oops.Code(ErrPermissionDenied).Errorf(format, a...)
+	return oops.Code(ErrPermissionDenied).Wrap(fmt.Errorf(format, a...))
 }
 
 func PermissionDeniedBuilder() oops.OopsErrorBuilder {

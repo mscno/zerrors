@@ -23,7 +23,7 @@ func Unauthenticated(message string, KVs ...interface{}) error {
 }
 
 func Unauthenticatedf(format string, a ...interface{}) error {
-	return oops.Code(ErrUnauthenticated).Errorf(format, a...)
+	return oops.Code(ErrUnauthenticated).Wrap(fmt.Errorf(format, a...))
 }
 
 func UnauthenticatedBuilder() oops.OopsErrorBuilder {

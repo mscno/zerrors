@@ -23,7 +23,7 @@ func Unknown(message string, KVs ...interface{}) error {
 }
 
 func Unknownf(format string, a ...interface{}) error {
-	return oops.Code(ErrUnknown).Errorf(format, a...)
+	return oops.Code(ErrUnknown).Wrap(fmt.Errorf(format, a...))
 }
 
 func UnknownBuilder() oops.OopsErrorBuilder {

@@ -40,3 +40,11 @@ func TestThrowFailedPrecondition(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestFailedPreconditionf(t *testing.T) {
+	err := FailedPreconditionf("something happened: %s", "reason")
+	ok := IsFailedPrecondition(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

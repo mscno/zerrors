@@ -40,3 +40,11 @@ func TestThrowDeadlineExceeded(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestDeadlineExceededf(t *testing.T) {
+	err := DeadlineExceededf("something happened: %s", "reason")
+	ok := IsDeadlineExceeded(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

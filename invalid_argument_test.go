@@ -40,3 +40,11 @@ func TestThrowInvalidArgument(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestInvalidArgumentf(t *testing.T) {
+	err := InvalidArgumentf("something happened: %s", "reason")
+	ok := IsInvalidArgument(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

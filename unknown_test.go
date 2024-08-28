@@ -40,3 +40,11 @@ func TestThrowUnknown(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestUnknownf(t *testing.T) {
+	err := Unknownf("something happened: %s", "reason")
+	ok := IsUnknown(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

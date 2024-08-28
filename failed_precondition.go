@@ -23,7 +23,7 @@ func FailedPrecondition(message string, KVs ...interface{}) error {
 }
 
 func FailedPreconditionf(format string, a ...interface{}) error {
-	return oops.Code(ErrFailedPrecondition).Errorf(format, a...)
+	return oops.Code(ErrFailedPrecondition).Wrap(fmt.Errorf(format, a...))
 }
 
 func FailedPreconditionBuilder() oops.OopsErrorBuilder {

@@ -40,3 +40,11 @@ func TestThrowPermissionDenied(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestPermissionDeniedf(t *testing.T) {
+	err := PermissionDeniedf("something happened: %s", "reason")
+	ok := IsPermissionDenied(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

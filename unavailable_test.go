@@ -40,3 +40,11 @@ func TestThrowUnavailable(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestUnavailablef(t *testing.T) {
+	err := Unavailablef("something happened: %s", "reason")
+	ok := IsUnavailable(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

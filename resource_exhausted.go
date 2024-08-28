@@ -23,7 +23,7 @@ func ResourceExhausted(message string, KVs ...interface{}) error {
 }
 
 func ResourceExhaustedf(format string, a ...interface{}) error {
-	return oops.Code(ErrResourceExhausted).Errorf(format, a...)
+	return oops.Code(ErrResourceExhausted).Wrap(fmt.Errorf(format, a...))
 }
 
 func ResourceExhaustedBuilder() oops.OopsErrorBuilder {

@@ -23,7 +23,7 @@ func Internal(message string, KVs ...interface{}) error {
 }
 
 func Internalf(format string, a ...interface{}) error {
-	return oops.Code(ErrInternal).Errorf(format, a...)
+	return oops.Code(ErrInternal).Wrap(fmt.Errorf(format, a...))
 }
 
 func InternalBuilder() oops.OopsErrorBuilder {

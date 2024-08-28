@@ -23,7 +23,7 @@ func InvalidArgument(message string, KVs ...interface{}) error {
 }
 
 func InvalidArgumentf(format string, a ...interface{}) error {
-	return oops.Code(ErrInvalidArgument).Errorf(format, a...)
+	return oops.Code(ErrInvalidArgument).Wrap(fmt.Errorf(format, a...))
 }
 
 func InvalidArgumentBuilder() oops.OopsErrorBuilder {

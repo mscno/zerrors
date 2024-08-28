@@ -40,3 +40,11 @@ func TestThrowNotFound(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestNotFoundf(t *testing.T) {
+	err := NotFoundf("something happened: %s", "reason")
+	ok := IsNotFound(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

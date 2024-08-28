@@ -40,3 +40,11 @@ func TestThrowAlreadyExists(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestAlreadyExistsf(t *testing.T) {
+	err := AlreadyExistsf("something happened: %s", "reason")
+	ok := IsAlreadyExists(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

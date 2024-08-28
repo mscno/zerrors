@@ -23,7 +23,7 @@ func AlreadyExists(message string, KVs ...interface{}) error {
 }
 
 func AlreadyExistsf(format string, a ...interface{}) error {
-	return oops.Code(ErrAlreadyExists).Errorf(format, a...)
+	return oops.Code(ErrAlreadyExists).Wrap(fmt.Errorf(format, a...))
 }
 
 func AlreadyExistsBuilder() oops.OopsErrorBuilder {

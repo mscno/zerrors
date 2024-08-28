@@ -40,3 +40,11 @@ func TestThrowInternal(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestInternalf(t *testing.T) {
+	err := Internalf("something happened: %s", "reason")
+	ok := IsInternal(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

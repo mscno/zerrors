@@ -23,7 +23,7 @@ func Unimplemented(message string, KVs ...interface{}) error {
 }
 
 func Unimplementedf(format string, a ...interface{}) error {
-	return oops.Code(ErrUnimplemented).Errorf(format, a...)
+	return oops.Code(ErrUnimplemented).Wrap(fmt.Errorf(format, a...))
 }
 
 func UnimplementedBuilder() oops.OopsErrorBuilder {

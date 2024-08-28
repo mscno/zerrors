@@ -23,7 +23,7 @@ func NotFound(message string, KVs ...interface{}) error {
 }
 
 func NotFoundf(format string, a ...interface{}) error {
-	return oops.Code(ErrNotFound).Errorf(format, a...)
+	return oops.Code(ErrNotFound).Wrap(fmt.Errorf(format, a...))
 }
 
 func NotFoundBuilder() oops.OopsErrorBuilder {

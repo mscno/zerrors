@@ -40,3 +40,11 @@ func TestThrowUnimplemented(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestUnimplementedf(t *testing.T) {
+	err := Unimplementedf("something happened: %s", "reason")
+	ok := IsUnimplemented(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

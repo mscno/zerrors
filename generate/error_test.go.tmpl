@@ -40,3 +40,11 @@ func TestThrow{{ .ErrorName }}(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func Test{{ .ErrorName }}f(t *testing.T) {
+	err := {{ .ErrorName }}f("something happened: %s", "reason")
+	ok := Is{{ .ErrorName }}(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

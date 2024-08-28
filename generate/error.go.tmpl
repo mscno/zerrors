@@ -23,7 +23,7 @@ func {{ .ErrorName }}(message string, KVs ...interface{}) error {
 }
 
 func {{ .ErrorName }}f(format string, a ...interface{}) error {
-	return oops.Code(Err{{ .ErrorName }}).Errorf(format, a...)
+	return oops.Code(Err{{ .ErrorName }}).Wrap(fmt.Errorf(format, a...))
 }
 
 func {{ .ErrorName }}Builder() oops.OopsErrorBuilder {

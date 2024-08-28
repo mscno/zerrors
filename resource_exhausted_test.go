@@ -40,3 +40,11 @@ func TestThrowResourceExhausted(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "cannot create 'sam' of kind 'user'")
 }
+
+func TestResourceExhaustedf(t *testing.T) {
+	err := ResourceExhaustedf("something happened: %s", "reason")
+	ok := IsResourceExhausted(err)
+	assert.True(t, ok)
+
+	assert.Equal(t, err.Error(), "something happened: reason")
+}

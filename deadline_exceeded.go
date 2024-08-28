@@ -23,7 +23,7 @@ func DeadlineExceeded(message string, KVs ...interface{}) error {
 }
 
 func DeadlineExceededf(format string, a ...interface{}) error {
-	return oops.Code(ErrDeadlineExceeded).Errorf(format, a...)
+	return oops.Code(ErrDeadlineExceeded).Wrap(fmt.Errorf(format, a...))
 }
 
 func DeadlineExceededBuilder() oops.OopsErrorBuilder {

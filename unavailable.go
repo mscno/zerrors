@@ -23,7 +23,7 @@ func Unavailable(message string, KVs ...interface{}) error {
 }
 
 func Unavailablef(format string, a ...interface{}) error {
-	return oops.Code(ErrUnavailable).Errorf(format, a...)
+	return oops.Code(ErrUnavailable).Wrap(fmt.Errorf(format, a...))
 }
 
 func UnavailableBuilder() oops.OopsErrorBuilder {
