@@ -30,7 +30,11 @@ func UnimplementedBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrUnimplemented)
 }
 
-func ToUnimplemented(parent error, format string, a ...interface{}) error {
+func ToUnimplemented(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrUnimplemented).With(KVs...).Wrap(parent)
+}
+
+func ToUnimplementedf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnimplemented).Wrapf(parent, format, a...)
 }
 

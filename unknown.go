@@ -30,7 +30,11 @@ func UnknownBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrUnknown)
 }
 
-func ToUnknown(parent error, format string, a ...interface{}) error {
+func ToUnknown(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrUnknown).With(KVs...).Wrap(parent)
+}
+
+func ToUnknownf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnknown).Wrapf(parent, format, a...)
 }
 

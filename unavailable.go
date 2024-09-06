@@ -30,7 +30,11 @@ func UnavailableBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrUnavailable)
 }
 
-func ToUnavailable(parent error, format string, a ...interface{}) error {
+func ToUnavailable(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrUnavailable).With(KVs...).Wrap(parent)
+}
+
+func ToUnavailablef(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnavailable).Wrapf(parent, format, a...)
 }
 

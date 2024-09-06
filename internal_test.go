@@ -48,3 +48,16 @@ func TestInternalf(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "something happened: reason")
 }
+
+func TestToInternalf(t *testing.T) {
+	err := ToInternalf(errors.New("something happened"), "key: %s", "value")
+	ok := IsInternal(err)
+	assert.True(t, ok)
+
+	var e oops.OopsError
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrInternal, e.Code())
+
+	assert.Equal(t, err.Error(), "key: value: something happened")
+}

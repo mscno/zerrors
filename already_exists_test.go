@@ -48,3 +48,16 @@ func TestAlreadyExistsf(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "something happened: reason")
 }
+
+func TestToAlreadyExistsf(t *testing.T) {
+	err := ToAlreadyExistsf(errors.New("something happened"), "key: %s", "value")
+	ok := IsAlreadyExists(err)
+	assert.True(t, ok)
+
+	var e oops.OopsError
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrAlreadyExists, e.Code())
+
+	assert.Equal(t, err.Error(), "key: value: something happened")
+}

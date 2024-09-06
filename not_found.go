@@ -30,7 +30,11 @@ func NotFoundBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrNotFound)
 }
 
-func ToNotFound(parent error, format string, a ...interface{}) error {
+func ToNotFound(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrNotFound).With(KVs...).Wrap(parent)
+}
+
+func ToNotFoundf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrNotFound).Wrapf(parent, format, a...)
 }
 

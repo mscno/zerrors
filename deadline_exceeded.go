@@ -30,7 +30,11 @@ func DeadlineExceededBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrDeadlineExceeded)
 }
 
-func ToDeadlineExceeded(parent error, format string, a ...interface{}) error {
+func ToDeadlineExceeded(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrDeadlineExceeded).With(KVs...).Wrap(parent)
+}
+
+func ToDeadlineExceededf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrDeadlineExceeded).Wrapf(parent, format, a...)
 }
 

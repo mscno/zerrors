@@ -30,7 +30,11 @@ func InvalidArgumentBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrInvalidArgument)
 }
 
-func ToInvalidArgument(parent error, format string, a ...interface{}) error {
+func ToInvalidArgument(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrInvalidArgument).With(KVs...).Wrap(parent)
+}
+
+func ToInvalidArgumentf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrInvalidArgument).Wrapf(parent, format, a...)
 }
 

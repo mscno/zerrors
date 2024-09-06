@@ -30,7 +30,11 @@ func {{ .ErrorName }}Builder() oops.OopsErrorBuilder {
 	return oops.Code(Err{{ .ErrorName }})
 }
 
-func To{{ .ErrorName }}(parent error, format string, a ...interface{}) error {
+func To{{ .ErrorName }}(parent error,  KVs ...interface{}) error {
+	return oops.Code(Err{{ .ErrorName }}).With(KVs...).Wrap(parent)
+}
+
+func To{{ .ErrorName }}f(parent error, format string, a ...interface{}) error {
 	return oops.Code(Err{{ .ErrorName }}).Wrapf(parent, format, a...)
 }
 

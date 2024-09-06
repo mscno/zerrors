@@ -30,7 +30,11 @@ func ResourceExhaustedBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrResourceExhausted)
 }
 
-func ToResourceExhausted(parent error, format string, a ...interface{}) error {
+func ToResourceExhausted(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrResourceExhausted).With(KVs...).Wrap(parent)
+}
+
+func ToResourceExhaustedf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrResourceExhausted).Wrapf(parent, format, a...)
 }
 

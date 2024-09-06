@@ -30,7 +30,11 @@ func UnauthenticatedBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrUnauthenticated)
 }
 
-func ToUnauthenticated(parent error, format string, a ...interface{}) error {
+func ToUnauthenticated(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrUnauthenticated).With(KVs...).Wrap(parent)
+}
+
+func ToUnauthenticatedf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrUnauthenticated).Wrapf(parent, format, a...)
 }
 

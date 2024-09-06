@@ -48,3 +48,16 @@ func TestInvalidArgumentf(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "something happened: reason")
 }
+
+func TestToInvalidArgumentf(t *testing.T) {
+	err := ToInvalidArgumentf(errors.New("something happened"), "key: %s", "value")
+	ok := IsInvalidArgument(err)
+	assert.True(t, ok)
+
+	var e oops.OopsError
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrInvalidArgument, e.Code())
+
+	assert.Equal(t, err.Error(), "key: value: something happened")
+}

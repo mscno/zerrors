@@ -30,7 +30,11 @@ func InternalBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrInternal)
 }
 
-func ToInternal(parent error, format string, a ...interface{}) error {
+func ToInternal(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrInternal).With(KVs...).Wrap(parent)
+}
+
+func ToInternalf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrInternal).Wrapf(parent, format, a...)
 }
 

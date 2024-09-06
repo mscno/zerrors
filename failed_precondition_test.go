@@ -48,3 +48,16 @@ func TestFailedPreconditionf(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "something happened: reason")
 }
+
+func TestToFailedPreconditionf(t *testing.T) {
+	err := ToFailedPreconditionf(errors.New("something happened"), "key: %s", "value")
+	ok := IsFailedPrecondition(err)
+	assert.True(t, ok)
+
+	var e oops.OopsError
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrFailedPrecondition, e.Code())
+
+	assert.Equal(t, err.Error(), "key: value: something happened")
+}

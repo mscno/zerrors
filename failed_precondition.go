@@ -30,7 +30,11 @@ func FailedPreconditionBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrFailedPrecondition)
 }
 
-func ToFailedPrecondition(parent error, format string, a ...interface{}) error {
+func ToFailedPrecondition(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrFailedPrecondition).With(KVs...).Wrap(parent)
+}
+
+func ToFailedPreconditionf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrFailedPrecondition).Wrapf(parent, format, a...)
 }
 

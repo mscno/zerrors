@@ -30,7 +30,11 @@ func AlreadyExistsBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrAlreadyExists)
 }
 
-func ToAlreadyExists(parent error, format string, a ...interface{}) error {
+func ToAlreadyExists(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrAlreadyExists).With(KVs...).Wrap(parent)
+}
+
+func ToAlreadyExistsf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrAlreadyExists).Wrapf(parent, format, a...)
 }
 

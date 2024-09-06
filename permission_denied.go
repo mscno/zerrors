@@ -30,7 +30,11 @@ func PermissionDeniedBuilder() oops.OopsErrorBuilder {
 	return oops.Code(ErrPermissionDenied)
 }
 
-func ToPermissionDenied(parent error, format string, a ...interface{}) error {
+func ToPermissionDenied(parent error, KVs ...interface{}) error {
+	return oops.Code(ErrPermissionDenied).With(KVs...).Wrap(parent)
+}
+
+func ToPermissionDeniedf(parent error, format string, a ...interface{}) error {
 	return oops.Code(ErrPermissionDenied).Wrapf(parent, format, a...)
 }
 

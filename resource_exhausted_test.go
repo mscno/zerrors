@@ -48,3 +48,16 @@ func TestResourceExhaustedf(t *testing.T) {
 
 	assert.Equal(t, err.Error(), "something happened: reason")
 }
+
+func TestToResourceExhaustedf(t *testing.T) {
+	err := ToResourceExhaustedf(errors.New("something happened"), "key: %s", "value")
+	ok := IsResourceExhausted(err)
+	assert.True(t, ok)
+
+	var e oops.OopsError
+	ok = errors.As(err, &e)
+	assert.True(t, ok)
+	assert.Equal(t, ErrResourceExhausted, e.Code())
+
+	assert.Equal(t, err.Error(), "key: value: something happened")
+}
